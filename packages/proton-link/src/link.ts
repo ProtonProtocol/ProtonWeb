@@ -4,6 +4,7 @@ import * as ecc from 'eosjs-ecc'
 import WebSocket from 'isomorphic-ws'
 import zlib from 'pako'
 import {v4 as uuid} from 'uuid'
+import styleText from './styles'
 
 import {CancelError, IdentityError} from './errors'
 import {LinkCreate} from './link-abi'
@@ -108,6 +109,11 @@ export class Link implements esr.AbiProvider {
     private requestOptions: esr.SigningRequestEncodingOptions
     private abiCache = new Map<string, any>()
     private pendingAbis = new Map<string, Promise<any>>()
+
+    /** Container and stylesheet for Wallet Selector */
+    private selectorContainerEl!: HTMLElement
+    private selectorEl!: HTMLElement
+    private styleEl?: HTMLStyleElement
 
     /** Create a new link instance. */
     constructor(options: LinkOptions) {
@@ -281,6 +287,91 @@ export class Link implements esr.AbiProvider {
             }
             throw error
         }
+    }
+
+    private closeSelector() {
+        this.hideSelector()
+    }
+
+    private hideSelector() {
+        if (this.selectorContainerEl) {
+            this.selectorContainerEl.classList.remove(`selector-active`)
+        } 
+    }
+
+    private showSelector() {
+        if (this.selectorContainerEl) {
+            this.selectorContainerEl.classList.add(`selector-active`)
+        }
+    }
+
+    private setUpSelectorContainer() {
+        this.styleEl = document.createElement('style')
+        this.styleEl.type = 'text/css'
+        this.styleEl.appendChild(document.createTextNode(styleText))
+        document.head.appendChild(this.styleEl)
+        
+        if (!this.selectorContainerEl) {
+            this.selectorContainerEl = this.createEl()
+            this.selectorContainerEl.className = 'selector'
+            this.selectorContainerEl.onclick = (event) => {
+                if (event.target === this.selectorContainerEl) {
+                    event.stopPropagation()
+                    this.closeSelector()
+                }
+            }
+            document.body.appendChild(this.selectorContainerEl)
+        }
+        if (!this.selectorEl) {
+            let wrapper = this.createEl({class: 'inner'})
+            let closeButton = this.createEl({class: 'close'})
+            closeButton.onclick = (event) => {
+                event.stopPropagation()
+                this.closeSelector()
+            }
+            this.selectorEl = this.createEl({class: 'connect'})
+            wrapper.appendChild(this.selectorEl)
+            wrapper.appendChild(closeButton)
+            this.selectorContainerEl.appendChild(wrapper)
+        }
+    }
+
+    private createEl(attrs?: {[key: string]: string}) {
+        if (!attrs) attrs = {}
+        const el = document.createElement(attrs.tag || 'div')
+        if (attrs) {
+            for (const attr of Object.keys(attrs)) {
+                const value = attrs[attr]
+                switch (attr) {
+                    case 'src':
+                        el.setAttribute(attr, value)
+                        break
+                    case 'tag':
+                        break
+                    case 'text':
+                        el.appendChild(document.createTextNode(value))
+                        break
+                    case 'class':
+                        el.className = `selector-${value}`
+                        break
+                    default:
+                        el.setAttribute(attr, value)
+                }
+            }
+        }
+        return el
+    }
+
+
+    /**
+     * Only Proton and Anchor are available 
+     */
+
+    public displayWalletSelector(
+
+    ) {
+        this.setUpSelectorContainer()
+        this.showSelector()
     }
 
     /**
