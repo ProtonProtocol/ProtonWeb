@@ -368,9 +368,59 @@ export class Link implements esr.AbiProvider {
      */
 
     public displayWalletSelector(
-
+        name : string = 'app', logo? : string, tos? : string
     ) {
         this.setUpSelectorContainer()
+        const header = this.createEl({class: 'connect-header'})
+        const body = this.createEl({ class: 'connect-body' })
+        
+        if (logo) {
+            const logoEl = this.createEl({class: 'logo', tag: 'img', src: logo, alt: 'app-logo'})
+            header.appendChild(logoEl)
+        }
+
+        const title = 'Connect Wallet'
+        const subtitle = `To start using ${name}`
+        const titleEl = this.createEl({class: 'title', tag: 'span', text: title})
+        const subtitleEl = this.createEl({class: 'subtitle', tag: 'span', text: subtitle})
+
+        const walletList = this.createEl({ class: 'wallet-list', tag: 'ul' })
+        const protonWallet = this.createEl({ class: 'proton-wallet', tag: 'li' })
+        const anchorWallet = this.createEl({ class: 'anchor-wallet', tag: 'li' })
+        
+        const protonLogo = this.createEl({ class: 'proton-logo' })
+        const anchorLogo = this.createEl({ class: 'anchor-logo' })
+        const protonName = this.createEl({ class: 'wallet-name', tag: 'span', text: 'Proton Wallet' })
+        const anchorName = this.createEl({ class: 'wallet-name', tag: 'span', text: 'Anchor' })
+        const protonRightArrow = this.createEl({ class: 'right-arrow' })
+        const anchorRightArrow = protonRightArrow.cloneNode()
+
+        protonWallet.appendChild(protonLogo)
+        protonWallet.appendChild(protonName)
+        protonWallet.appendChild(protonRightArrow)
+
+        anchorWallet.appendChild(anchorLogo)
+        anchorWallet.appendChild(anchorName)
+        anchorWallet.appendChild(anchorRightArrow)
+
+        walletList.appendChild(protonWallet)
+        walletList.appendChild(anchorWallet)
+
+        header.appendChild(titleEl)
+        header.appendChild(subtitleEl)
+        body.appendChild(walletList)
+
+        if (tos) {
+            const tosLinkEl = this.createEl({ class: 'tos-link', tag: 'a', text: `Terms of Service`, href: tos, target: '_blank' })
+            const tosAgreementEl = this.createEl({ class: 'tos-agreement', tag: 'p', text: `By connecting, I accept ${name}'s `})
+            tosAgreementEl.appendChild(tosLinkEl)
+            body.appendChild(tosAgreementEl)
+        }
+
+        emptyElement(this.selectorEl)
+
+        this.selectorEl.appendChild(header)
+        this.selectorEl.appendChild(body)
         this.showSelector()
     }
 
@@ -830,4 +880,10 @@ function formatAuth(auth: PermissionLevel): string {
         permission = '<any>'
     }
     return `${actor}@${permission}`
+}
+
+function emptyElement(el: HTMLElement) {
+    while (el.firstChild) {
+        el.removeChild(el.firstChild)
+    }
 }
