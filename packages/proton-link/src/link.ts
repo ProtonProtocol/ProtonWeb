@@ -289,19 +289,15 @@ export class Link implements esr.AbiProvider {
         }
     }
 
-    private closeSelector() {
-        this.hideSelector()
-    }
-
     private hideSelector() {
         if (this.selectorContainerEl) {
-            this.selectorContainerEl.classList.remove(`selector-active`)
+            this.selectorContainerEl.classList.remove(`wallet-selector-active`)
         } 
     }
 
     private showSelector() {
         if (this.selectorContainerEl) {
-            this.selectorContainerEl.classList.add(`selector-active`)
+            this.selectorContainerEl.classList.add(`wallet-selector-active`)
         }
     }
 
@@ -313,11 +309,11 @@ export class Link implements esr.AbiProvider {
         
         if (!this.selectorContainerEl) {
             this.selectorContainerEl = this.createEl()
-            this.selectorContainerEl.className = 'selector'
+            this.selectorContainerEl.className = 'wallet-selector'
             this.selectorContainerEl.onclick = (event) => {
                 if (event.target === this.selectorContainerEl) {
                     event.stopPropagation()
-                    this.closeSelector()
+                    this.hideSelector()
                 }
             }
             document.body.appendChild(this.selectorContainerEl)
@@ -327,7 +323,7 @@ export class Link implements esr.AbiProvider {
             let closeButton = this.createEl({class: 'close'})
             closeButton.onclick = (event) => {
                 event.stopPropagation()
-                this.closeSelector()
+                this.hideSelector()
             }
             this.selectorEl = this.createEl({class: 'connect'})
             wrapper.appendChild(this.selectorEl)
@@ -352,7 +348,7 @@ export class Link implements esr.AbiProvider {
                         el.appendChild(document.createTextNode(value))
                         break
                     case 'class':
-                        el.className = `selector-${value}`
+                        el.className = `wallet-selector-${value}`
                         break
                     default:
                         el.setAttribute(attr, value)
@@ -368,7 +364,7 @@ export class Link implements esr.AbiProvider {
      */
 
     public displayWalletSelector(
-        name : string = 'app', logo? : string, tos? : string
+        name : string = 'app', logo? : string
     ) {
         this.setUpSelectorContainer()
         const header = this.createEl({class: 'connect-header'})
@@ -406,16 +402,15 @@ export class Link implements esr.AbiProvider {
         walletList.appendChild(protonWallet)
         walletList.appendChild(anchorWallet)
 
+        const tosLinkEl = this.createEl({ class: 'tos-link', tag: 'a', text: `Terms of Service`, href: 'https://protonchain.com/terms', target: '_blank' })
+        const tosAgreementEl = this.createEl({ class: 'tos-agreement', tag: 'p', text: `By connecting, I accept Proton's `})
+        tosAgreementEl.appendChild(tosLinkEl)
+
         header.appendChild(titleEl)
         header.appendChild(subtitleEl)
         body.appendChild(walletList)
-
-        if (tos) {
-            const tosLinkEl = this.createEl({ class: 'tos-link', tag: 'a', text: `Terms of Service`, href: tos, target: '_blank' })
-            const tosAgreementEl = this.createEl({ class: 'tos-agreement', tag: 'p', text: `By connecting, I accept ${name}'s `})
-            tosAgreementEl.appendChild(tosLinkEl)
-            body.appendChild(tosAgreementEl)
-        }
+        body.appendChild(tosAgreementEl)
+        
 
         emptyElement(this.selectorEl)
 
