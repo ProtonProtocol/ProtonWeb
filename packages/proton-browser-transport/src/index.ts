@@ -84,15 +84,21 @@ export default class BrowserTransport implements LinkTransport {
             document.body.appendChild(this.containerEl)
         }
         if (!this.requestEl) {
-            let wrapper = this.createEl({class: 'inner'})
-            let closeButton = this.createEl({class: 'close'})
+            const wrapper = this.createEl({class: 'inner'})
+            const nav = this.createEl({class: 'nav'})
+            const backButton = this.createEl({class: 'back'})
+            const navHeader = this.createEl({ class: 'header', tag: 'span', text: 'Scan the QR-code'})
+            const closeButton = this.createEl({class: 'close'})
             closeButton.onclick = (event) => {
                 event.stopPropagation()
                 this.closeModal()
             }
             this.requestEl = this.createEl({class: 'request'})
+            nav.appendChild(backButton)
+            nav.appendChild(navHeader)
+            nav.appendChild(closeButton)
+            wrapper.appendChild(nav)
             wrapper.appendChild(this.requestEl)
-            wrapper.appendChild(closeButton)
             this.containerEl.appendChild(wrapper)
         }
     }
@@ -151,9 +157,7 @@ export default class BrowserTransport implements LinkTransport {
         let sameDeviceUri = sameDeviceRequest.encode(true, false)
         let crossDeviceUri = request.encode(true, false)
 
-        const isIdentity = request.isIdentity()
-        const title = isIdentity ? 'Login with Proton' : 'Sign with Proton'
-        const subtitle = 'Scan the QR-code with your Proton Wallet'
+        const logoEl = this.createEl({class: 'logo'})
 
         const qrEl = this.createEl({class: 'qr'})
         try {
@@ -188,41 +192,33 @@ export default class BrowserTransport implements LinkTransport {
         })
         linkEl.appendChild(iframe)
 
-        const infoEl = this.createEl({class: 'info'})
-        const infoTitle = this.createEl({class: 'title', tag: 'span', text: title})
-        const infoSubtitle = this.createEl({class: 'subtitle', tag: 'span', text: subtitle})
-        infoEl.appendChild(infoTitle)
-        infoEl.appendChild(infoSubtitle)
 
         const backgroundEl = this.createEl({class: 'background'})
-        const waveBackground = this.createEl({class: 'wave'})
         const divider = this.createEl({class: 'separator', text: 'OR'})
 
         const actionEl = this.createEl({class: 'actions'})
         actionEl.appendChild(backgroundEl)
-        actionEl.appendChild(waveBackground)
         actionEl.appendChild(divider)
         actionEl.appendChild(linkEl)
 
         backgroundEl.appendChild(qrEl)
 
         let footnoteEl: HTMLElement = this.createEl({class: 'footnote'})
+        const isIdentity = request.isIdentity();
         if (isIdentity) {
             footnoteEl = this.createEl({class: 'footnote', text: "Don't have Proton Wallet? "})
             const footnoteLink = this.createEl({
                 tag: 'a',
                 target: '_blank',
                 href: 'https://protonchain.com',
-                text: 'Download it now',
+                text: 'Download it here',
             })
             footnoteEl.appendChild(footnoteLink)
         }
 
         emptyElement(this.requestEl)
 
-        const logoEl = this.createEl({class: 'logo'})
         this.requestEl.appendChild(logoEl)
-        this.requestEl.appendChild(infoEl)
         this.requestEl.appendChild(actionEl)
         this.requestEl.appendChild(footnoteEl)
 
