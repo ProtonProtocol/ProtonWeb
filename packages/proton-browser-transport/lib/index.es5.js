@@ -376,28 +376,6 @@ var BrowserTransport = /** @class */ (function () {
             this.countdownTimer = undefined;
         }
     };
-    // private updatePrepareStatus(message: string): void {
-    //     if (this.prepareStatusEl) {
-    //         this.prepareStatusEl.textContent = message
-    //     }
-    // }
-    // public async prepare(request: SigningRequest, session?: LinkSession) {
-    //     this.showLoading()
-    //     if (!this.fuelEnabled || !session || request.isIdentity()) {
-    //         // don't attempt to cosign id request or if we don't have a session attached
-    //         return request
-    //     }
-    //     try {
-    //         const result = fuel(request, session, this.updatePrepareStatus.bind(this))
-    //         const timeout = new Promise((r) => setTimeout(r, 3500)).then(() => {
-    //             throw new Error('Fuel API timeout after 3500ms')
-    //         })
-    //         return await Promise.race([result, timeout])
-    //     } catch (error) {
-    //         console.info(`Not applying fuel (${error.message})`)
-    //     }
-    //     return request
-    // }
     BrowserTransport.prototype.onSuccess = function (request) {
         var _this = this;
         if (request === this.activeRequest) {
