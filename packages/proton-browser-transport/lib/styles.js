@@ -1,5 +1,5 @@
 export default `
-/* Anchor Link */
+/* Proton Browser Link Modal */
 
 .%prefix% * {
     box-sizing: border-box;
