@@ -357,9 +357,9 @@ export default class BrowserTransport implements LinkTransport {
                 this.requestEl.appendChild(logoEl)
                 this.requestEl.appendChild(infoEl)
                 this.show()
-                // this.closeTimer = setTimeout(() => {
-                //     this.hide()
-                // }, 1.5 * 1000)
+                this.closeTimer = setTimeout(() => {
+                    this.hide()
+                }, 1.5 * 1000)
             } else {
                 this.hide()
             }
