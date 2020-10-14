@@ -29,6 +29,7 @@ export default class BrowserTransport implements LinkTransport {
     private closeTimer?;
     private closeModal;
     private setupElements;
+    private clearDuplicateContainers;
     private createEl;
     private hide;
     private show;

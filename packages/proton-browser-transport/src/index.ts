@@ -64,7 +64,7 @@ export default class BrowserTransport implements LinkTransport {
         }
     }
 
-    private setupElements() {
+    private setupElements(title = '') {
         if (this.injectStyles && !this.styleEl) {
             this.styleEl = document.createElement('style')
             this.styleEl.type = 'text/css'
@@ -73,6 +73,7 @@ export default class BrowserTransport implements LinkTransport {
             document.head.appendChild(this.styleEl)
         }
         if (!this.containerEl) {
+            this.clearDuplicateContainers()
             this.containerEl = this.createEl()
             this.containerEl.className = this.classPrefix
             this.containerEl.onclick = (event) => {
@@ -86,11 +87,10 @@ export default class BrowserTransport implements LinkTransport {
         if (!this.requestEl) {
             const wrapper = this.createEl({class: 'inner'})
             const nav = this.createEl({class: 'nav'})
-            const backButton = this.createEl({class: 'back'})
             const navHeader = this.createEl({
                 class: 'header',
                 tag: 'span',
-                text: 'Scan the QR-code',
+                text: '',
             })
             const closeButton = this.createEl({class: 'close'})
             closeButton.onclick = (event) => {
@@ -98,12 +98,22 @@ export default class BrowserTransport implements LinkTransport {
                 this.closeModal()
             }
             this.requestEl = this.createEl({class: 'request'})
-            nav.appendChild(backButton)
             nav.appendChild(navHeader)
             nav.appendChild(closeButton)
             wrapper.appendChild(nav)
             wrapper.appendChild(this.requestEl)
             this.containerEl.appendChild(wrapper)
+        }
+
+        if (title) {
+            document.getElementsByClassName(`${this.classPrefix}-header`)[0].textContent = title
+        }
+    }
+
+    private clearDuplicateContainers() {
+        const elements = document.getElementsByClassName(this.classPrefix)
+        while(elements.length > 0) {
+            elements[0].remove()
         }
     }
 
@@ -147,7 +157,7 @@ export default class BrowserTransport implements LinkTransport {
     }
 
     private async displayRequest(request) {
-        this.setupElements()
+        this.setupElements('Scan the QR-Code')
 
         let sameDeviceRequest = request.clone()
         sameDeviceRequest.setInfoKey('same_device', true)

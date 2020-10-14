@@ -33,6 +33,7 @@ export default class SupportedWallets {
         document.head.appendChild(this.styleEl)
 
         if (!this.selectorContainerEl) {
+            this.clearDuplicateContainers()
             this.selectorContainerEl = this.createEl()
             this.selectorContainerEl.className = 'wallet-selector'
             this.selectorContainerEl.onclick = (event) => {
@@ -54,6 +55,13 @@ export default class SupportedWallets {
             wrapper.appendChild(this.selectorEl)
             wrapper.appendChild(closeButton)
             this.selectorContainerEl.appendChild(wrapper)
+        }
+    }
+
+    private clearDuplicateContainers() {
+        const elements = document.getElementsByClassName('wallet-selector')
+        while(elements.length > 0) {
+            elements[0].remove()
         }
     }
 
