@@ -64,7 +64,7 @@ export default class BrowserTransport implements LinkTransport {
         }
     }
 
-    private setupElements() {
+    private setupElements(title = '') {
         if (this.injectStyles && !this.styleEl) {
             this.styleEl = document.createElement('style')
             this.styleEl.type = 'text/css'
@@ -73,6 +73,7 @@ export default class BrowserTransport implements LinkTransport {
             document.head.appendChild(this.styleEl)
         }
         if (!this.containerEl) {
+            this.clearDuplicateContainers()
             this.containerEl = this.createEl()
             this.containerEl.className = this.classPrefix
             this.containerEl.onclick = (event) => {
@@ -86,11 +87,10 @@ export default class BrowserTransport implements LinkTransport {
         if (!this.requestEl) {
             const wrapper = this.createEl({class: 'inner'})
             const nav = this.createEl({class: 'nav'})
-            const backButton = this.createEl({class: 'back'})
             const navHeader = this.createEl({
                 class: 'header',
                 tag: 'span',
-                text: 'Scan the QR-code',
+                text: '',
             })
             const closeButton = this.createEl({class: 'close'})
             closeButton.onclick = (event) => {
@@ -98,12 +98,19 @@ export default class BrowserTransport implements LinkTransport {
                 this.closeModal()
             }
             this.requestEl = this.createEl({class: 'request'})
-            nav.appendChild(backButton)
             nav.appendChild(navHeader)
             nav.appendChild(closeButton)
             wrapper.appendChild(nav)
             wrapper.appendChild(this.requestEl)
             this.containerEl.appendChild(wrapper)
+        }
+        document.getElementsByClassName(`${this.classPrefix}-header`)[0].textContent = title
+    }
+
+    private clearDuplicateContainers() {
+        const elements = document.getElementsByClassName(this.classPrefix)
+        while(elements.length > 0) {
+            elements[0].remove()
         }
     }
 
@@ -147,7 +154,7 @@ export default class BrowserTransport implements LinkTransport {
     }
 
     private async displayRequest(request: SigningRequest) {
-        this.setupElements()
+        this.setupElements('Scan the QR-Code')
 
         let sameDeviceRequest = request.clone()
         sameDeviceRequest.setInfoKey('same_device', true)
@@ -283,29 +290,30 @@ export default class BrowserTransport implements LinkTransport {
 
         this.activeRequest = request
         this.activeCancel = cancel
-        this.setupElements()
+        this.setupElements('Pending...')
 
         const timeout = session.metadata.timeout || 60 * 1000 * 2
         const deviceName = session.metadata.name
 
         const start = Date.now()
-        const infoTitle = this.createEl({class: 'title', tag: 'span', text: 'Sign'})
+        const countdown = this.createEl({class: 'countdown', tag: 'span', text: ''})
 
         const updateCountdown = () => {
             const timeLeft = timeout + start - Date.now()
             const timeFormatted =
                 timeLeft > 0 ? new Date(timeLeft).toISOString().substr(14, 5) : '00:00'
-            infoTitle.textContent = `Sign - ${timeFormatted}`
+            countdown.textContent = `${timeFormatted}`
         }
         this.countdownTimer = setInterval(updateCountdown, 500)
         updateCountdown()
 
         const infoEl = this.createEl({class: 'info'})
+        const infoTitle = this.createEl({class: 'title', tag: 'span', text: 'Confirm payment'})
         infoEl.appendChild(infoTitle)
 
         let subtitle: string
         if (deviceName && deviceName.length > 0) {
-            subtitle = `Please open Anchor app on “${deviceName}” to review and sign the transaction.`
+            subtitle = `Please open on “${deviceName}” to review and sign the transaction.`
         } else {
             subtitle = 'Please review and sign the transaction in the linked wallet.'
         }
@@ -314,8 +322,7 @@ export default class BrowserTransport implements LinkTransport {
         infoEl.appendChild(infoSubtitle)
 
         emptyElement(this.requestEl)
-        const logoEl = this.createEl({class: 'logo'})
-        this.requestEl.appendChild(logoEl)
+        this.requestEl.appendChild(countdown)
         this.requestEl.appendChild(infoEl)
         this.show()
 
@@ -339,22 +346,20 @@ export default class BrowserTransport implements LinkTransport {
         if (request === this.activeRequest) {
             this.clearTimers()
             if (this.requestStatus) {
-                this.setupElements()
+                this.setupElements('Success')
                 const infoEl = this.createEl({class: 'info'})
                 const logoEl = this.createEl({class: 'logo'})
                 logoEl.classList.add('success')
-                const infoTitle = this.createEl({class: 'title', tag: 'span', text: 'Success!'})
-                const subtitle = request.isIdentity() ? 'Identity signed.' : 'Transaction signed.'
-                const infoSubtitle = this.createEl({class: 'subtitle', tag: 'span', text: subtitle})
+                const info = request.isIdentity() ? 'Your wallet was successfully linked' : 'Your transaction was successfully signed'
+                const infoTitle = this.createEl({class: 'title', tag: 'span', text: info})
                 infoEl.appendChild(infoTitle)
-                infoEl.appendChild(infoSubtitle)
                 emptyElement(this.requestEl)
                 this.requestEl.appendChild(logoEl)
                 this.requestEl.appendChild(infoEl)
                 this.show()
-                this.closeTimer = setTimeout(() => {
-                    this.hide()
-                }, 1.5 * 1000)
+                // this.closeTimer = setTimeout(() => {
+                //     this.hide()
+                // }, 1.5 * 1000)
             } else {
                 this.hide()
             }
@@ -365,7 +370,7 @@ export default class BrowserTransport implements LinkTransport {
         if (request === this.activeRequest && error['code'] !== 'E_CANCEL') {
             this.clearTimers()
             if (this.requestStatus) {
-                this.setupElements()
+                this.setupElements('Transaction Failed')
                 const infoEl = this.createEl({class: 'info'})
                 const logoEl = this.createEl({class: 'logo'})
                 logoEl.classList.add('error')

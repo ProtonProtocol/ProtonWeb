@@ -74,9 +74,7 @@ export default class BrowserTransport {
             wrapper.appendChild(this.requestEl);
             this.containerEl.appendChild(wrapper);
         }
-        if (title) {
-            document.getElementsByClassName(`${this.classPrefix}-header`)[0].textContent = title;
-        }
+        document.getElementsByClassName(`${this.classPrefix}-header`)[0].textContent = title;
     }
     clearDuplicateContainers() {
         const elements = document.getElementsByClassName(this.classPrefix);
@@ -226,19 +224,20 @@ export default class BrowserTransport {
         }
         this.activeRequest = request;
         this.activeCancel = cancel;
-        this.setupElements();
+        this.setupElements('Pending...');
         const timeout = session.metadata.timeout || 60 * 1000 * 2;
         const deviceName = session.metadata.name;
         const start = Date.now();
-        const infoTitle = this.createEl({ class: 'title', tag: 'span', text: 'Sign' });
+        const countdown = this.createEl({ class: 'countdown', tag: 'span', text: '' });
         const updateCountdown = () => {
             const timeLeft = timeout + start - Date.now();
             const timeFormatted = timeLeft > 0 ? new Date(timeLeft).toISOString().substr(14, 5) : '00:00';
-            infoTitle.textContent = `Sign - ${timeFormatted}`;
+            countdown.textContent = `${timeFormatted}`;
         };
         this.countdownTimer = setInterval(updateCountdown, 500);
         updateCountdown();
         const infoEl = this.createEl({ class: 'info' });
+        const infoTitle = this.createEl({ class: 'title', tag: 'span', text: 'Confirm payment' });
         infoEl.appendChild(infoTitle);
         let subtitle;
         if (deviceName && deviceName.length > 0) {
@@ -250,8 +249,7 @@ export default class BrowserTransport {
         const infoSubtitle = this.createEl({ class: 'subtitle', tag: 'span', text: subtitle });
         infoEl.appendChild(infoSubtitle);
         emptyElement(this.requestEl);
-        const logoEl = this.createEl({ class: 'logo' });
-        this.requestEl.appendChild(logoEl);
+        this.requestEl.appendChild(countdown);
         this.requestEl.appendChild(infoEl);
         this.show();
         if (isAppleHandheld() && session.metadata.sameDevice) {
@@ -273,15 +271,13 @@ export default class BrowserTransport {
         if (request === this.activeRequest) {
             this.clearTimers();
             if (this.requestStatus) {
-                this.setupElements();
+                this.setupElements('Success');
                 const infoEl = this.createEl({ class: 'info' });
                 const logoEl = this.createEl({ class: 'logo' });
                 logoEl.classList.add('success');
-                const infoTitle = this.createEl({ class: 'title', tag: 'span', text: 'Success!' });
-                const subtitle = request.isIdentity() ? 'Identity signed.' : 'Transaction signed.';
-                const infoSubtitle = this.createEl({ class: 'subtitle', tag: 'span', text: subtitle });
+                const info = request.isIdentity() ? 'Your wallet was successfully linked' : 'Your transaction was successfully signed';
+                const infoTitle = this.createEl({ class: 'title', tag: 'span', text: info });
                 infoEl.appendChild(infoTitle);
-                infoEl.appendChild(infoSubtitle);
                 emptyElement(this.requestEl);
                 this.requestEl.appendChild(logoEl);
                 this.requestEl.appendChild(infoEl);
@@ -299,7 +295,7 @@ export default class BrowserTransport {
         if (request === this.activeRequest && error['code'] !== 'E_CANCEL') {
             this.clearTimers();
             if (this.requestStatus) {
-                this.setupElements();
+                this.setupElements('Transaction Failed');
                 const infoEl = this.createEl({ class: 'info' });
                 const logoEl = this.createEl({ class: 'logo' });
                 logoEl.classList.add('error');
