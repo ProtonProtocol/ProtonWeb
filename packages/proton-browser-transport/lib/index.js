@@ -34,7 +34,7 @@ export default class BrowserTransport {
             this.activeCancel = undefined;
         }
     }
-    setupElements() {
+    setupElements(title = '') {
         if (this.injectStyles && !this.styleEl) {
             this.styleEl = document.createElement('style');
             this.styleEl.type = 'text/css';
@@ -43,6 +43,7 @@ export default class BrowserTransport {
             document.head.appendChild(this.styleEl);
         }
         if (!this.containerEl) {
+            this.clearDuplicateContainers();
             this.containerEl = this.createEl();
             this.containerEl.className = this.classPrefix;
             this.containerEl.onclick = (event) => {
@@ -56,20 +57,29 @@ export default class BrowserTransport {
         if (!this.requestEl) {
             const wrapper = this.createEl({ class: 'inner' });
             const nav = this.createEl({ class: 'nav' });
-            const backButton = this.createEl({ class: 'back' });
-            const navHeader = this.createEl({ class: 'header', tag: 'span', text: 'Scan the QR-code' });
+            const navHeader = this.createEl({
+                class: 'header',
+                tag: 'span',
+                text: '',
+            });
             const closeButton = this.createEl({ class: 'close' });
             closeButton.onclick = (event) => {
                 event.stopPropagation();
                 this.closeModal();
             };
             this.requestEl = this.createEl({ class: 'request' });
-            nav.appendChild(backButton);
             nav.appendChild(navHeader);
             nav.appendChild(closeButton);
             wrapper.appendChild(nav);
             wrapper.appendChild(this.requestEl);
             this.containerEl.appendChild(wrapper);
+        }
+        document.getElementsByClassName(`${this.classPrefix}-header`)[0].textContent = title;
+    }
+    clearDuplicateContainers() {
+        const elements = document.getElementsByClassName(this.classPrefix);
+        while (elements.length > 0) {
+            elements[0].remove();
         }
     }
     createEl(attrs) {
@@ -110,7 +120,7 @@ export default class BrowserTransport {
         }
     }
     async displayRequest(request) {
-        this.setupElements();
+        this.setupElements('Scan the QR-Code');
         let sameDeviceRequest = request.clone();
         sameDeviceRequest.setInfoKey('same_device', true);
         sameDeviceRequest.setInfoKey('return_path', returnUrl());
@@ -214,19 +224,20 @@ export default class BrowserTransport {
         }
         this.activeRequest = request;
         this.activeCancel = cancel;
-        this.setupElements();
+        this.setupElements('Pending...');
         const timeout = session.metadata.timeout || 60 * 1000 * 2;
         const deviceName = session.metadata.name;
         const start = Date.now();
-        const infoTitle = this.createEl({ class: 'title', tag: 'span', text: 'Sign' });
+        const countdown = this.createEl({ class: 'countdown', tag: 'span', text: '' });
         const updateCountdown = () => {
             const timeLeft = timeout + start - Date.now();
             const timeFormatted = timeLeft > 0 ? new Date(timeLeft).toISOString().substr(14, 5) : '00:00';
-            infoTitle.textContent = `Sign - ${timeFormatted}`;
+            countdown.textContent = `${timeFormatted}`;
         };
         this.countdownTimer = setInterval(updateCountdown, 500);
         updateCountdown();
         const infoEl = this.createEl({ class: 'info' });
+        const infoTitle = this.createEl({ class: 'title', tag: 'span', text: 'Confirm payment' });
         infoEl.appendChild(infoTitle);
         let subtitle;
         if (deviceName && deviceName.length > 0) {
@@ -238,8 +249,7 @@ export default class BrowserTransport {
         const infoSubtitle = this.createEl({ class: 'subtitle', tag: 'span', text: subtitle });
         infoEl.appendChild(infoSubtitle);
         emptyElement(this.requestEl);
-        const logoEl = this.createEl({ class: 'logo' });
-        this.requestEl.appendChild(logoEl);
+        this.requestEl.appendChild(countdown);
         this.requestEl.appendChild(infoEl);
         this.show();
         if (isAppleHandheld() && session.metadata.sameDevice) {
@@ -261,15 +271,13 @@ export default class BrowserTransport {
         if (request === this.activeRequest) {
             this.clearTimers();
             if (this.requestStatus) {
-                this.setupElements();
+                this.setupElements('Success');
                 const infoEl = this.createEl({ class: 'info' });
                 const logoEl = this.createEl({ class: 'logo' });
                 logoEl.classList.add('success');
-                const infoTitle = this.createEl({ class: 'title', tag: 'span', text: 'Success!' });
-                const subtitle = request.isIdentity() ? 'Identity signed.' : 'Transaction signed.';
-                const infoSubtitle = this.createEl({ class: 'subtitle', tag: 'span', text: subtitle });
+                const info = request.isIdentity() ? 'Your wallet was successfully linked' : 'Your transaction was successfully signed';
+                const infoTitle = this.createEl({ class: 'title', tag: 'span', text: info });
                 infoEl.appendChild(infoTitle);
-                infoEl.appendChild(infoSubtitle);
                 emptyElement(this.requestEl);
                 this.requestEl.appendChild(logoEl);
                 this.requestEl.appendChild(infoEl);
@@ -287,7 +295,7 @@ export default class BrowserTransport {
         if (request === this.activeRequest && error['code'] !== 'E_CANCEL') {
             this.clearTimers();
             if (this.requestStatus) {
-                this.setupElements();
+                this.setupElements('Transaction Failed');
                 const infoEl = this.createEl({ class: 'info' });
                 const logoEl = this.createEl({ class: 'logo' });
                 logoEl.classList.add('error');
