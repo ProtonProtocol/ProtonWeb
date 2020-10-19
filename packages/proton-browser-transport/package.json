@@ -29,6 +29,7 @@
     "@protonprotocol/protonjs": "^21.0.21",
     "qrcode": "^1.4.4"
   },
+  "peerDependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "tsdx lint"

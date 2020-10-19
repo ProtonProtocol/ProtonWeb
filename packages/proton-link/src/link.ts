@@ -746,9 +746,3 @@ function formatAuth(auth: PermissionLevel): string {
     }
     return `${actor}@${permission}`
 }
-
-function emptyElement(el: HTMLElement) {
-    while (el.firstChild) {
-        el.removeChild(el.firstChild)
-    }
-}
