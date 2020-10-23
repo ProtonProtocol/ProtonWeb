@@ -39,7 +39,11 @@
   },
   "dependencies": {
     "@protonprotocol/proton-signing-request": "^2.4.7",
+<<<<<<< HEAD
     "@protonprotocol/protonjs": "^21.0.21",
+=======
+    "eosjs": "^20.0.0",
+>>>>>>> master
     "eosjs-ecc": "^4.0.7",
     "isomorphic-ws": "^4.0.1",
     "pako": "^1.0.11",

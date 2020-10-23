@@ -17,7 +17,7 @@ const styles : stylesInterface = {
 }
 
 const styleSelector = (walletType: string) => {
-  return (`
+return (`
 /* Anchor Link Modal */
 
 .%prefix% * {
@@ -267,8 +267,7 @@ const styleSelector = (walletType: string) => {
     background-color: rgba(255, 255, 255, 0.25);
     transition: 0.2s ease;
 }
-`
-  );
+`);
 }
 
 export default styleSelector;
