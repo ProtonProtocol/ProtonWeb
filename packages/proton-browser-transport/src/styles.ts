@@ -139,7 +139,7 @@ return (`
     margin: 60px auto 35px;
     border-radius: 100%;
     background-color: white;
-    color: ${styles[walletType].backgroundColor}
+    color: ${styles[walletType].backgroundColor};
     font-size: 28px;
     line-height: 40px;
 }
