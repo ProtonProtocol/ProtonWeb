@@ -13,6 +13,7 @@ export default class SupportedWallets {
     private selectorContainerEl!: HTMLElement
     private selectorEl!: HTMLElement
     private styleEl?: HTMLStyleElement
+    private font?: HTMLLinkElement
 
     private hideSelector() {
         if (this.selectorContainerEl) {
@@ -32,9 +33,13 @@ export default class SupportedWallets {
     }
 
     private setUpSelectorContainer() {
+        this.font = document.createElement('link')
+        this.font.href = 'https://fonts.cdnfonts.com/css/circular-std-book'
+        this.font.rel = 'stylesheet';
         this.styleEl = document.createElement('style')
         this.styleEl.type = 'text/css'
         this.styleEl.appendChild(document.createTextNode(styleText))
+        this.styleEl.appendChild(this.font)
         document.head.appendChild(this.styleEl)
 
         if (!this.selectorContainerEl) {

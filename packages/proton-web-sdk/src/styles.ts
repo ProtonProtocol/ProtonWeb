@@ -1,13 +1,12 @@
 /* I do not see any ttf files for fonts, so assuming they need to be added (marking as TODO for later) */
 export default `
-
 .wallet-selector * {
     box-sizing: border-box;
     line-height: 1;
 }
 
 .wallet-selector {
-    font-family: CircularStd, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    font-family: 'Circular Std Book', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
         Arial, sans-serif;
     font-size: 13px;
     background: rgba(0, 0, 0, 0.65);
@@ -81,7 +80,7 @@ export default `
 
 .wallet-selector-title {
     font-size: 16px;
-    font-family: CircularStd-Book;
+    font-family: 'Circular Std Book', sans-serif;
     line-height: 24px;
     color: black;
     text-align: center;
@@ -89,7 +88,7 @@ export default `
 
 .wallet-selector-subtitle {
     font-size: 16px;
-    font-family: CircularStd-Book;
+    font-family: 'Circular Std Book', sans-serif;
     line-height: 24px;
     color: #a1a5b0;
     text-align: center;
@@ -138,7 +137,7 @@ export default `
 }
 
 .wallet-selector-wallet-name {
-    font-family: CircularStd;
+    font-family: 'Circular Std Book', sans-serif;
     font-size: 16px;
     line-height: 24px;
     color: #000531;
@@ -164,7 +163,7 @@ export default `
 }
 
 .wallet-selector-tos-agreement {
-    font-family: CircularStd-Book;
+    font-family: 'Circular Std Book', sans-serif;
     font-size: 12px;
     line-height: 16px;
     color: rgb(161, 165, 176);
