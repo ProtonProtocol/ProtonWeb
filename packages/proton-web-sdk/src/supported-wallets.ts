@@ -17,6 +17,11 @@ export default class SupportedWallets {
     private hideSelector() {
         if (this.selectorContainerEl) {
             this.selectorContainerEl.classList.remove(`wallet-selector-active`)
+            try { 
+                throw new Error('no wallet selected') 
+            } catch(error) {
+                console.log(error);
+            }
         }
     }
 
