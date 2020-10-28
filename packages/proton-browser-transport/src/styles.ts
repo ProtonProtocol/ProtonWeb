@@ -26,7 +26,7 @@ return (`
 }
 
 .%prefix% {
-    font-family: CircularStd, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    font-family: 'Circular Std Book', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
         Arial, sans-serif;
     font-size: 13px;
     background: rgba(0, 0, 0, 0.65);
@@ -70,7 +70,7 @@ return (`
 }
 
 .%prefix%-header {
-    font-family: CircularStd-Book;
+    font-family: 'Circular Std Book';
     font-size: 16px;
     line-height: 24px;
 }
@@ -230,7 +230,7 @@ return (`
 }
 
 .%prefix%-footnote {
-    font-family: CircularStd-Book;
+    font-family: 'Circular Std Book';
     font-size: 16px;
     text-align: center;
     width: 100%;
@@ -251,7 +251,7 @@ return (`
 .%prefix%-uri a {
     width: 100%;
     background-color: rgba(255, 255, 255, 0.3);
-    font-family: CircularStd;
+    font-family: 'Circular Std Book';
     font-size: 16px;
     font-weight: 500;
     text-align: center;

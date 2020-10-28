@@ -66,6 +66,7 @@ export default class BrowserTransport implements LinkTransport {
     private containerEl!: HTMLElement
     private requestEl!: HTMLElement
     private styleEl?: HTMLStyleElement
+    private font?: HTMLLinkElement
     private countdownTimer?: NodeJS.Timeout
     private closeTimer?: NodeJS.Timeout
 
@@ -80,10 +81,14 @@ export default class BrowserTransport implements LinkTransport {
 
     private setupElements(title = '') {
         if (this.injectStyles && !this.styleEl) {
+            this.font = document.createElement('link')
+            this.font.href = 'https://fonts.cdnfonts.com/css/circular-std-book'
+            this.font.rel = 'stylesheet';
             this.styleEl = document.createElement('style')
             this.styleEl.type = 'text/css'
             const css = styleSelector(this.walletType).replace(/%prefix%/g, this.classPrefix)
             this.styleEl.appendChild(document.createTextNode(css))
+            this.styleEl.appendChild(this.font)
             document.head.appendChild(this.styleEl)
         }
         if (!this.containerEl) {
