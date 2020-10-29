@@ -16,6 +16,8 @@ export interface BrowserTransportOptions {
     requestAccount?: string
     /** Wallet name e.g. proton, anchor, etc */
     walletType?: string
+    /** Option to include back button in transport modal */
+    backButton?: boolean
 }
 
 interface footNoteDownloadLinks {
@@ -54,6 +56,7 @@ export default class BrowserTransport implements LinkTransport {
         this.storage = new Storage(options.storagePrefix || 'proton-link')
         this.requestAccount = options.requestAccount || ''
         this.walletType = options.walletType || 'proton'
+        this.backButton = options.backButton || false
     }
 
     private classPrefix: string
@@ -61,6 +64,7 @@ export default class BrowserTransport implements LinkTransport {
     private requestStatus: boolean
     private requestAccount: string
     private walletType: string
+    private backButton: boolean
     private activeRequest?: SigningRequest
     private activeCancel?: (reason: string | Error) => void
     private containerEl!: HTMLElement
@@ -111,6 +115,16 @@ export default class BrowserTransport implements LinkTransport {
                 tag: 'span',
                 text: '',
             })
+            if (this.backButton) {
+                console.info('Use addEventListener("backToSelector", () => ...) to handle back event. See documentation for details: https://docs.protonchain.com/sdk/');
+                const backButton = this.createEl({class: 'back' })
+                backButton.onclick = (event) => {
+                    event.stopPropagation()
+                    this.closeModal()
+                    document.dispatchEvent(new CustomEvent('backToSelector'))
+                }
+                nav.appendChild(backButton)
+            }
             const closeButton = this.createEl({class: 'close'})
             closeButton.onclick = (event) => {
                 event.stopPropagation()

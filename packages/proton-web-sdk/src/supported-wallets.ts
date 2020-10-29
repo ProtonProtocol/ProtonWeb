@@ -18,17 +18,20 @@ export default class SupportedWallets {
     private hideSelector() {
         if (this.selectorContainerEl) {
             this.selectorContainerEl.classList.remove(`wallet-selector-active`)
-            try { 
-                throw new Error('no wallet selected') 
-            } catch(error) {
-                console.log(error);
-            }
         }
     }
 
     private showSelector() {
         if (this.selectorContainerEl) {
             this.selectorContainerEl.classList.add(`wallet-selector-active`)
+        }
+    }
+
+    private consoleError(error:string) {
+        try { 
+            throw new Error(error) 
+        } catch(e) {
+            console.error(e);
         }
     }
 
@@ -50,6 +53,7 @@ export default class SupportedWallets {
                 if (event.target === this.selectorContainerEl) {
                     event.stopPropagation()
                     this.hideSelector()
+                    this.consoleError('no wallet selected')
                 }
             }
             document.body.appendChild(this.selectorContainerEl)
@@ -60,6 +64,7 @@ export default class SupportedWallets {
             closeButton.onclick = (event) => {
                 event.stopPropagation()
                 this.hideSelector()
+                this.consoleError('no wallet selected')
             }
             this.selectorEl = this.createEl({class: 'connect'})
             wrapper.appendChild(this.selectorEl)
