@@ -87,7 +87,7 @@ return (`
 }
 
 .%prefix%-header {
-    font-family: 'Circular Std Book';
+    font-family: 'Circular Std Book', sans-serif;
     font-size: 16px;
     line-height: 24px;
 }
@@ -247,7 +247,7 @@ return (`
 }
 
 .%prefix%-footnote {
-    font-family: 'Circular Std Book';
+    font-family: 'Circular Std Book', sans-serif;
     font-size: 16px;
     text-align: center;
     width: 100%;
@@ -268,7 +268,7 @@ return (`
 .%prefix%-uri a {
     width: 100%;
     background-color: rgba(255, 255, 255, 0.3);
-    font-family: 'Circular Std Book';
+    font-family: 'Circular Std Book', sans-serif;
     font-size: 16px;
     font-weight: 500;
     text-align: center;
