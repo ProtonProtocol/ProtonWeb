@@ -38,7 +38,7 @@ export default {
         },
         selectorOptions: {
           appName: 'Taskly',
-          appLogo: 'https://protondemos.com/static/media/taskly-logo.ad0bfb0f.svg',
+          appLogo: 'https://taskly.protonchain.com/static/media/taskly-logo.ad0bfb0f.svg',
           showSelector
         }
       })

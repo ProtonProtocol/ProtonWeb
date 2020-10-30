@@ -16,6 +16,8 @@ export interface BrowserTransportOptions {
     requestAccount?: string
     /** Wallet name e.g. proton, anchor, etc */
     walletType?: string
+    /** Option to include back button in transport modal */
+    backButton?: boolean
 }
 
 interface footNoteDownloadLinks {
@@ -54,6 +56,7 @@ export default class BrowserTransport implements LinkTransport {
         this.storage = new Storage(options.storagePrefix || 'proton-link')
         this.requestAccount = options.requestAccount || ''
         this.walletType = options.walletType || 'proton'
+        this.backButton = options.backButton || false
     }
 
     private classPrefix: string
@@ -61,11 +64,13 @@ export default class BrowserTransport implements LinkTransport {
     private requestStatus: boolean
     private requestAccount: string
     private walletType: string
+    private backButton: boolean
     private activeRequest?: SigningRequest
     private activeCancel?: (reason: string | Error) => void
     private containerEl!: HTMLElement
     private requestEl!: HTMLElement
     private styleEl?: HTMLStyleElement
+    private font?: HTMLLinkElement
     private countdownTimer?: NodeJS.Timeout
     private closeTimer?: NodeJS.Timeout
 
@@ -80,10 +85,14 @@ export default class BrowserTransport implements LinkTransport {
 
     private setupElements(title = '') {
         if (this.injectStyles && !this.styleEl) {
+            this.font = document.createElement('link')
+            this.font.href = 'https://fonts.cdnfonts.com/css/circular-std-book'
+            this.font.rel = 'stylesheet';
             this.styleEl = document.createElement('style')
             this.styleEl.type = 'text/css'
             const css = styleSelector(this.walletType).replace(/%prefix%/g, this.classPrefix)
             this.styleEl.appendChild(document.createTextNode(css))
+            this.styleEl.appendChild(this.font)
             document.head.appendChild(this.styleEl)
         }
         if (!this.containerEl) {
@@ -106,6 +115,16 @@ export default class BrowserTransport implements LinkTransport {
                 tag: 'span',
                 text: '',
             })
+            if (this.backButton) {
+                console.info('Use addEventListener("backToSelector", () => ...) to handle back event. See documentation for details: https://docs.protonchain.com/sdk/');
+                const backButton = this.createEl({class: 'back' })
+                backButton.onclick = (event) => {
+                    event.stopPropagation()
+                    this.closeModal()
+                    document.dispatchEvent(new CustomEvent('backToSelector'))
+                }
+                nav.appendChild(backButton)
+            }
             const closeButton = this.createEl({class: 'close'})
             closeButton.onclick = (event) => {
                 event.stopPropagation()

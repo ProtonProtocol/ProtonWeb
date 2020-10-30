@@ -13,6 +13,7 @@ export default class SupportedWallets {
     private selectorContainerEl!: HTMLElement
     private selectorEl!: HTMLElement
     private styleEl?: HTMLStyleElement
+    private font?: HTMLLinkElement
 
     private hideSelector() {
         if (this.selectorContainerEl) {
@@ -26,10 +27,22 @@ export default class SupportedWallets {
         }
     }
 
+    private consoleError(error:string) {
+        try { 
+            throw new Error(error) 
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
     private setUpSelectorContainer() {
+        this.font = document.createElement('link')
+        this.font.href = 'https://fonts.cdnfonts.com/css/circular-std-book'
+        this.font.rel = 'stylesheet';
         this.styleEl = document.createElement('style')
         this.styleEl.type = 'text/css'
         this.styleEl.appendChild(document.createTextNode(styleText))
+        this.styleEl.appendChild(this.font)
         document.head.appendChild(this.styleEl)
 
         if (!this.selectorContainerEl) {
@@ -40,6 +53,7 @@ export default class SupportedWallets {
                 if (event.target === this.selectorContainerEl) {
                     event.stopPropagation()
                     this.hideSelector()
+                    this.consoleError('no wallet selected')
                 }
             }
             document.body.appendChild(this.selectorContainerEl)
@@ -50,6 +64,7 @@ export default class SupportedWallets {
             closeButton.onclick = (event) => {
                 event.stopPropagation()
                 this.hideSelector()
+                this.consoleError('no wallet selected')
             }
             this.selectorEl = this.createEl({class: 'connect'})
             wrapper.appendChild(this.selectorEl)
