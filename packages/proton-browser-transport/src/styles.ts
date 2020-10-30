@@ -220,7 +220,7 @@ return (`
 
 .%prefix%-uri {
     width: 100%;
-    padding: 20px 4px 0px 4px;
+    padding: 20px 0px 0px 0px;
 }
 
 .%prefix%-background {
@@ -278,6 +278,7 @@ return (`
     flex: 1;
     padding: 18px 0px 16px 0px;
     display: block;
+    border-radius: 10px;
 }
 
 .%prefix%-uri a:hover {

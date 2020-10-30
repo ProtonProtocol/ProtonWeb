@@ -332,7 +332,7 @@ export default class BrowserTransport implements LinkTransport {
         updateCountdown()
 
         const infoEl = this.createEl({class: 'info'})
-        const infoTitle = this.createEl({class: 'title', tag: 'span', text: 'Confirm payment'})
+        const infoTitle = this.createEl({class: 'title', tag: 'span', text: 'Confirm request'})
         infoEl.appendChild(infoTitle)
 
         let subtitle: string
