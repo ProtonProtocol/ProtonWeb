@@ -2,11 +2,7 @@
  * EOSIO Signing Request (ESR).
  */
 
-<<<<<<< HEAD
 import {Serialize} from '@protonprotocol/protonjs'
-=======
-import {Serialize, TextEncoder, TextDecoder} from '@protonprotocol/protonjs'
->>>>>>> Add hot-reloading of packages, walletType, proton testnet, full example and remove anchor-link (#15)
 import sha256 from 'fast-sha256'
 require('fast-text-encoding');
 
