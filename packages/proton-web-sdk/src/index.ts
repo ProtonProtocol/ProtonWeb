@@ -1,7 +1,23 @@
 import ProtonLinkBrowserTransport, { BrowserTransportOptions } from '@protonprotocol/proton-browser-transport'
-import ProtonLink, { LinkOptions } from '@protonprotocol/proton-link'
+import ProtonLink, { LinkOptions, LinkStorage } from '@protonprotocol/proton-link'
 import { JsonRpc } from '@protonprotocol/protonjs'
 import SupportedWallets from './supported-wallets'
+
+class Storage implements LinkStorage {
+    constructor(readonly keyPrefix: string) {}
+    async write(key: string, data: string): Promise<void> {
+        localStorage.setItem(this.storageKey(key), data)
+    }
+    async read(key: string): Promise<string | null> {
+        return localStorage.getItem(this.storageKey(key))
+    }
+    async remove(key: string): Promise<void> {
+        localStorage.removeItem(this.storageKey(key))
+    }
+    storageKey(key: string) {
+        return `${this.keyPrefix}-${key}`
+    }
+}
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
@@ -9,6 +25,8 @@ interface ConnectWalletArgs {
     linkOptions: PartialBy<LinkOptions, 'transport'> & {
         endpoints?: string | string[],
         rpc?: JsonRpc,
+        storage?: LinkStorage,
+        storagePrefix?: string
     },
     transportOptions?: BrowserTransportOptions;
     selectorOptions?: {
@@ -33,6 +51,11 @@ export const ConnectWallet = async ({
     if (!linkOptions.chainId) {
         const info = await linkOptions.rpc!.get_info();;
         linkOptions.chainId = info.chain_id
+    }
+
+    // Add storage if not present
+    if (!linkOptions.storage) {
+        linkOptions.storage = new Storage(linkOptions.storagePrefix || 'proton-storage')
     }
 
     // Default showSelector to true

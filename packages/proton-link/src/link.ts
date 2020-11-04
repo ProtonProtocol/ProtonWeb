@@ -135,7 +135,7 @@ export class Link implements esr.AbiProvider {
         this.serviceAddress = (options.service || defaults.service).trim().replace(/\/$/, '')
         this.transport = options.transport
         if (options.storage !== null) {
-            this.storage = options.storage || this.transport.storage
+            this.storage = options.storage
         }
         this.requestOptions = {
             abiProvider: this,
