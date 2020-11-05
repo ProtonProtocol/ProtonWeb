@@ -23,7 +23,7 @@ interface footNoteDownloadLinks {
 }
 
 const footnoteLinks : footNoteDownloadLinks = {
-    proton: 'https://protonchain.com',
+    proton: 'https://protonchain.com/wallet',
     anchor: 'https://greymass.com/en/anchor/'
 }
 
@@ -94,7 +94,6 @@ export default class BrowserTransport implements LinkTransport {
                 text: '',
             })
             if (this.backButton) {
-                console.info('Use addEventListener("backToSelector", () => ...) to handle back event. See documentation for details: https://docs.protonchain.com/sdk/');
                 const backButton = this.createEl({class: 'back' })
                 backButton.onclick = (event) => {
                     event.stopPropagation()

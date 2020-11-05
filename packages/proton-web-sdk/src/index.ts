@@ -1,5 +1,5 @@
 import ProtonLinkBrowserTransport, { BrowserTransportOptions } from '@protonprotocol/proton-browser-transport'
-import ProtonLink, { LinkOptions, LinkStorage } from '@protonprotocol/proton-link'
+import ProtonLink, { LinkOptions, LinkStorage, PermissionLevel } from '@protonprotocol/proton-link'
 import { JsonRpc } from '@protonprotocol/protonjs'
 import SupportedWallets from './supported-wallets'
 
@@ -26,7 +26,8 @@ interface ConnectWalletArgs {
         endpoints?: string | string[],
         rpc?: JsonRpc,
         storage?: LinkStorage,
-        storagePrefix?: string
+        storagePrefix?: string,
+        restoreSession?: boolean
     },
     transportOptions?: BrowserTransportOptions;
     selectorOptions?: {
@@ -59,58 +60,102 @@ export const ConnectWallet = async ({
     }
 
     // Default showSelector to true
-    if (!selectorOptions.showSelector) {
+    if (selectorOptions.showSelector !== false) {
         selectorOptions.showSelector = true
     }
 
-    // Create Modal Class
-    const wallets = new SupportedWallets(selectorOptions.appName, selectorOptions.appLogo)
-
-    // Determine wallet type from storage or selector modal
-    let walletType = selectorOptions.walletType
-    if (!walletType) {
-        const storedWalletType = localStorage.getItem('browser-transport-wallet-type')
-        if (storedWalletType) {
-            walletType = storedWalletType
-        } else if (selectorOptions.showSelector) {
-            walletType = await wallets.displayWalletSelector()
-        } else {
-            throw new Error('Wallet Type Unavailable: No walletType provided and showSelector is set to false')
+    // Stop restore session if no saved data
+    if (linkOptions.restoreSession) {
+        const savedUserAuth = await linkOptions.storage.read('user-auth')
+        const walletType = await linkOptions.storage.read('wallet-type')
+        if (!savedUserAuth || !walletType) {
+            // clean storage to remove unexpected side effects if session restore fails
+            linkOptions.storage.remove('wallet-type')
+            linkOptions.storage.remove('user-auth')
+            return { link: null, session: null }
         }
     }
 
-    // Set scheme (proton default)
-    switch (walletType) {
-        case 'anchor':
-            linkOptions.scheme = 'esr'
-            break
-        case 'proton': {
-            // Proton Testnet
-            if (linkOptions.chainId === '71ee83bcf52142d61019d95f9cc5427ba6a0d7ff8accd9e2088ae2abeaf3d3dd') {
-                linkOptions.scheme = 'proton-dev'
+    let session, link
+
+    while(!session) {
+        // Create Modal Class
+        const wallets = new SupportedWallets(selectorOptions.appName, selectorOptions.appLogo)
+
+        // Determine wallet type from storage or selector modal
+        let walletType = selectorOptions.walletType
+        if (!walletType) {
+            const storedWalletType = await linkOptions.storage.read('wallet-type')
+            if (storedWalletType) {
+                walletType = storedWalletType
+            } else if (selectorOptions.showSelector) {
+                walletType = await wallets.displayWalletSelector()
             } else {
-                linkOptions.scheme = 'proton'
+                try {
+                    throw new Error('Wallet Type Unavailable: No walletType provided and showSelector is set to false')
+                } catch (e) {
+                    console.error(e)
+                }
             }
-            break;
         }
-        default:
-            linkOptions.scheme = 'proton'
-            break
+
+        // Set scheme (proton default)
+        switch (walletType) {
+            case 'anchor':
+                linkOptions.scheme = 'esr'
+                break
+            case 'proton': {
+                // Proton Testnet
+                if (linkOptions.chainId === '71ee83bcf52142d61019d95f9cc5427ba6a0d7ff8accd9e2088ae2abeaf3d3dd') {
+                    linkOptions.scheme = 'proton-dev'
+                } else {
+                    linkOptions.scheme = 'proton'
+                }
+                break;
+            }
+            default:
+                linkOptions.scheme = 'proton'
+                break
+        }
+
+        // Create transport
+        const transport = new ProtonLinkBrowserTransport({
+            ...transportOptions,
+            walletType
+        })
+
+        // Create link
+        link = new ProtonLink({
+            ...linkOptions,
+            transport,
+            walletType
+        })
+
+        // Get session based on login or restore session
+        if (!linkOptions.restoreSession) {
+            let backToSelector = false
+            document.addEventListener('backToSelector', () => {backToSelector = true})
+            try {
+                const loginResult = await link.login(transportOptions.requestAccount || '')
+                session = loginResult.session
+                linkOptions.storage.write('user-auth', JSON.stringify(session.auth))
+            } catch(e) {
+                if (backToSelector) {
+                    document.removeEventListener('backToSelector', () => {backToSelector = true})
+                    continue
+                }
+                return e
+            }
+        } else {
+            const stringifiedUserAuth = await linkOptions.storage.read('user-auth')
+            const parsedUserAuth = stringifiedUserAuth ? JSON.parse(stringifiedUserAuth) : {}
+            const savedUserAuth : PermissionLevel = Object.keys(parsedUserAuth).length > 0 ? parsedUserAuth : null
+            if (savedUserAuth) {
+                session = await link.restoreSession(transportOptions.requestAccount || '', savedUserAuth)
+            }
+        }
     }
 
-    // Create transport
-    const transport = new ProtonLinkBrowserTransport({
-        ...transportOptions,
-        walletType
-    })
-
-    // Create link
-    const link = new ProtonLink({
-        ...linkOptions,
-        transport,
-        walletType
-    })
-
-    // Return link
-    return link
+    // Return link, session
+    return { link, session }
 }

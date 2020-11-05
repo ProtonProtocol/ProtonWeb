@@ -559,8 +559,11 @@ export class Link implements esr.AbiProvider {
         let key = this.sessionKey(identifier, formatAuth(auth))
         await this.storage.remove(key)
         await this.touchSession(identifier, auth, true)
-        if (this.storage.read('wallet-type')) {
+        if (await this.storage.read('wallet-type')) {
             this.storage.remove('wallet-type')
+        }
+        if (await this.storage.read('user-auth')) {
+            this.storage.remove('user-auth')
         }
     }
 
