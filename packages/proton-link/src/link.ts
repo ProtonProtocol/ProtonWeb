@@ -135,7 +135,7 @@ export class Link implements esr.AbiProvider {
         this.serviceAddress = (options.service || defaults.service).trim().replace(/\/$/, '')
         this.transport = options.transport
         if (options.storage !== null) {
-            this.storage = options.storage || this.transport.storage
+            this.storage = options.storage
         }
         this.requestOptions = {
             abiProvider: this,
@@ -464,7 +464,7 @@ export class Link implements esr.AbiProvider {
 
         // once successfully logged in, set wallet type so restore session can work properly
         if (this.walletType.length > 0) {
-            localStorage.setItem('browser-transport-wallet-type', this.walletType)
+            this.storage!.write('wallet-type', this.walletType)
         }
 
         return {
@@ -559,8 +559,11 @@ export class Link implements esr.AbiProvider {
         let key = this.sessionKey(identifier, formatAuth(auth))
         await this.storage.remove(key)
         await this.touchSession(identifier, auth, true)
-        if (localStorage.getItem('browser-transport-wallet-type')) {
-            localStorage.removeItem('browser-transport-wallet-type')
+        if (await this.storage.read('wallet-type')) {
+            this.storage.remove('wallet-type')
+        }
+        if (await this.storage.read('user-auth')) {
+            this.storage.remove('user-auth')
         }
     }
 

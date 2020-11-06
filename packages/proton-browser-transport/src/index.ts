@@ -1,4 +1,4 @@
-import {LinkSession, LinkStorage, LinkTransport} from '@protonprotocol/proton-link'
+import {LinkSession, LinkTransport} from '@protonprotocol/proton-link'
 import {SigningRequest} from '@protonprotocol/proton-signing-request'
 import * as qrcode from 'qrcode'
 import styleSelector from './styles'
@@ -10,8 +10,6 @@ export interface BrowserTransportOptions {
     injectStyles?: boolean
     /** Whether to display request success and error messages, defaults to true */
     requestStatus?: boolean
-    /** Local storage prefix, defaults to `@protonprotocol/proton-link`. */
-    storagePrefix?: string
     /** Requesting account of the dapp (optional) */
     requestAccount?: string
     /** Wallet name e.g. proton, anchor, etc */
@@ -25,35 +23,15 @@ interface footNoteDownloadLinks {
 }
 
 const footnoteLinks : footNoteDownloadLinks = {
-    proton: 'https://protonchain.com',
+    proton: 'https://protonchain.com/wallet',
     anchor: 'https://greymass.com/en/anchor/'
 }
 
-
-class Storage implements LinkStorage {
-    constructor(readonly keyPrefix: string) {}
-    async write(key: string, data: string): Promise<void> {
-        localStorage.setItem(this.storageKey(key), data)
-    }
-    async read(key: string): Promise<string | null> {
-        return localStorage.getItem(this.storageKey(key))
-    }
-    async remove(key: string): Promise<void> {
-        localStorage.removeItem(this.storageKey(key))
-    }
-    storageKey(key: string) {
-        return `${this.keyPrefix}-${key}`
-    }
-}
-
 export default class BrowserTransport implements LinkTransport {
-    storage: LinkStorage
-
     constructor(public readonly options: BrowserTransportOptions = {}) {
         this.classPrefix = options.classPrefix || 'proton-link'
         this.injectStyles = !(options.injectStyles === false)
         this.requestStatus = !(options.requestStatus === false)
-        this.storage = new Storage(options.storagePrefix || 'proton-link')
         this.requestAccount = options.requestAccount || ''
         this.walletType = options.walletType || 'proton'
         this.backButton = options.backButton || false
@@ -116,7 +94,6 @@ export default class BrowserTransport implements LinkTransport {
                 text: '',
             })
             if (this.backButton) {
-                console.info('Use addEventListener("backToSelector", () => ...) to handle back event. See documentation for details: https://docs.protonchain.com/sdk/');
                 const backButton = this.createEl({class: 'back' })
                 backButton.onclick = (event) => {
                     event.stopPropagation()
