@@ -27,15 +27,7 @@ export default class SupportedWallets {
         }
     }
 
-    private consoleError(error:string) {
-        try { 
-            throw new Error(error) 
-        } catch(e) {
-            console.error(e);
-        }
-    }
-
-    private setUpSelectorContainer() {
+    private setUpSelectorContainer(reject: any) {
         this.font = document.createElement('link')
         this.font.href = 'https://fonts.cdnfonts.com/css/circular-std-book'
         this.font.rel = 'stylesheet';
@@ -53,7 +45,7 @@ export default class SupportedWallets {
                 if (event.target === this.selectorContainerEl) {
                     event.stopPropagation()
                     this.hideSelector()
-                    this.consoleError('no wallet selected')
+                    reject('no wallet selected')
                 }
             }
             document.body.appendChild(this.selectorContainerEl)
@@ -64,7 +56,7 @@ export default class SupportedWallets {
             closeButton.onclick = (event) => {
                 event.stopPropagation()
                 this.hideSelector()
-                this.consoleError('no wallet selected')
+                reject('no wallet selected')
             }
             this.selectorEl = this.createEl({class: 'connect'})
             wrapper.appendChild(this.selectorEl)
@@ -110,8 +102,8 @@ export default class SupportedWallets {
      * Only Proton and Anchor are available
      */
     public displayWalletSelector(): Promise<string> {
-        return new Promise((resolve) => {
-            this.setUpSelectorContainer()
+        return new Promise((resolve, reject) => {
+            this.setUpSelectorContainer(reject)
             const header = this.createEl({class: 'connect-header'})
             const body = this.createEl({class: 'connect-body'})
             if (this.appLogo) {

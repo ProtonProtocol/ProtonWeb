@@ -76,7 +76,7 @@ export const ConnectWallet = async ({
         }
     }
 
-    let session, link
+    let session, link, loginResult
 
     while(!session) {
         // Create Modal Class
@@ -89,7 +89,11 @@ export const ConnectWallet = async ({
             if (storedWalletType) {
                 walletType = storedWalletType
             } else if (selectorOptions.showSelector) {
-                walletType = await wallets.displayWalletSelector()
+                try {
+                    walletType = await wallets.displayWalletSelector()
+                } catch(e) {
+                    throw new Error(e)
+                }
             } else {
                 try {
                     throw new Error('Wallet Type Unavailable: No walletType provided and showSelector is set to false')
@@ -136,7 +140,7 @@ export const ConnectWallet = async ({
             let backToSelector = false
             document.addEventListener('backToSelector', () => {backToSelector = true})
             try {
-                const loginResult = await link.login(transportOptions.requestAccount || '')
+                loginResult = await link.login(transportOptions.requestAccount || '')
                 session = loginResult.session
                 linkOptions.storage.write('user-auth', JSON.stringify(session.auth))
             } catch(e) {
@@ -157,5 +161,5 @@ export const ConnectWallet = async ({
     }
 
     // Return link, session
-    return { link, session }
+    return { link, session, loginResult }
 }
