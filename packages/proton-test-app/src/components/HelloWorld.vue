@@ -50,9 +50,6 @@ export default {
       // Create link
       await this.createLink({ restoreSession: false })
       console.log('User authorization:', this.session.auth) // { actor: 'fred', permission: 'active }
-
-      // Save auth for reconnection on refresh
-      localStorage.setItem('saved-user-auth', JSON.stringify(this.session.auth))
     },
 
     async transfer () {
@@ -82,18 +79,13 @@ export default {
     async logout () {
       await this.link.removeSession(appIdentifier, this.session.auth)
       this.session = undefined
-      localStorage.removeItem('saved-user-auth')
     },
 
     async reconnect () {
-      // Restore session after refresh
-      const saved = localStorage.getItem('saved-user-auth')
-
-      if (saved) {
-        // Create link if not exists
-        if (!this.link) {
-          await this.createLink({ restoreSession: true })
-        }
+      try {
+        await this.createLink({ restoreSession: true })
+      } catch (e) {
+        console.warn(e)
       }
     }
   },
