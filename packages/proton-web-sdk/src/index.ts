@@ -34,7 +34,6 @@ interface ConnectWalletArgs {
         appName?: string,
         appLogo?: string,
         walletType?: string
-        showSelector?: boolean
     }
 }
 
@@ -57,11 +56,6 @@ export const ConnectWallet = async ({
     // Add storage if not present
     if (!linkOptions.storage) {
         linkOptions.storage = new Storage(linkOptions.storagePrefix || 'proton-storage')
-    }
-
-    // Default showSelector to true
-    if (selectorOptions.showSelector !== false) {
-        selectorOptions.showSelector = true
     }
 
     // Stop restore session if no saved data
@@ -88,7 +82,7 @@ export const ConnectWallet = async ({
             const storedWalletType = await linkOptions.storage.read('wallet-type')
             if (storedWalletType) {
                 walletType = storedWalletType
-            } else if (selectorOptions.showSelector) {
+            } else if (!linkOptions.restoreSession) {
                 try {
                     walletType = await wallets.displayWalletSelector()
                 } catch(e) {
@@ -96,7 +90,7 @@ export const ConnectWallet = async ({
                 }
             } else {
                 try {
-                    throw new Error('Wallet Type Unavailable: No walletType provided and showSelector is set to false')
+                    throw new Error('Wallet Type Unavailable: No walletType provided')
                 } catch (e) {
                     console.error(e)
                 }

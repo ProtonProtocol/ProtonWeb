@@ -30,7 +30,6 @@ const link = await ConnectWallet({
         appName: 'Taskly', /* Optional: Name to show in modal, Default 'app' */
         appLogo: 'https://protondemos.com/static/media/taskly-logo.ad0bfb0f.svg', /* Optional: Logo to show in modal */
         // walletType: 'proton' /* Optional: Connect to only specified wallet (e.g. 'proton', 'anchor') */
-        // showSelector: false /* Optional: Reconnect without modal if false, Default true */
     }
 })
 
@@ -66,11 +65,11 @@ const result = await session.transact({
 })
 console.log('Transaction ID', result.processed.id)
 
-// Restore session after refresh (must recreate link first with showSelector as false)
+// Restore session after refresh (must recreate link first with restoreSession as true)
 const { link, session } = await ConnectWallet({
     linkOptions: { chainId: this.chainId, endpoints: this.endpoints, restoreSession: true},
     transportOptions: { requestAccount: this.requestAccount },
-    selectorOptions: { appName: this.appName, appLogo: appLogo, showSelector: false}
+    selectorOptions: { appName: this.appName, appLogo: appLogo}
   });
   this.link = link;
   this.session = session;
