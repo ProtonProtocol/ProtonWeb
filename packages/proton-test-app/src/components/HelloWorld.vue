@@ -27,10 +27,11 @@ export default {
   },
 
   methods: {
-    async createLink (showSelector) {
-      this.link = await ConnectWallet({
+    async createLink ({ restoreSession }) {
+      const { link, session } = await ConnectWallet({
         linkOptions: {
-          endpoints: ['https://proton.greymass.com']
+          endpoints: ['https://proton.greymass.com'],
+          restoreSession
         },
         transportOptions: {
           requestAccount: 'myprotonacc', // Your proton account
@@ -38,23 +39,20 @@ export default {
         },
         selectorOptions: {
           appName: 'Taskly',
-          appLogo: 'https://taskly.protonchain.com/static/media/taskly-logo.ad0bfb0f.svg',
-          showSelector
+          appLogo: 'https://taskly.protonchain.com/static/media/taskly-logo.ad0bfb0f.svg'
         }
       })
+      this.link = link
+      this.session = session
     },
 
     async login () {
       // Create link
-      await this.createLink()
-
-      // Login
-      const { session } = await this.link.login(appIdentifier)
-      this.session = session
-      console.log('User authorization:', session.auth) // { actor: 'fred', permission: 'active }
+      await this.createLink({ restoreSession: false })
+      console.log('User authorization:', this.session.auth) // { actor: 'fred', permission: 'active }
 
       // Save auth for reconnection on refresh
-      localStorage.setItem('saved-user-auth', JSON.stringify(session.auth))
+      localStorage.setItem('saved-user-auth', JSON.stringify(this.session.auth))
     },
 
     async transfer () {
@@ -94,11 +92,8 @@ export default {
       if (saved) {
         // Create link if not exists
         if (!this.link) {
-          await this.createLink(false)
+          await this.createLink({ restoreSession: true })
         }
-
-        const savedUserAuth = JSON.parse(saved)
-        this.session = await this.link.restoreSession(appIdentifier, savedUserAuth)
       }
     }
   },
