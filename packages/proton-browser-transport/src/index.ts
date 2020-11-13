@@ -34,7 +34,7 @@ export default class BrowserTransport implements LinkTransport {
         this.requestStatus = !(options.requestStatus === false)
         this.requestAccount = options.requestAccount || ''
         this.walletType = options.walletType || 'proton'
-        this.backButton = options.backButton || false
+        this.backButton = !(options.backButton === false)
     }
 
     private classPrefix: string
