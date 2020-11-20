@@ -645,7 +645,11 @@ export class Link implements esr.AbiProvider {
             auths.unshift(auth)
         }
         let key = this.sessionKey(identifier, 'list')
-        await this.storage!.write(key, JSON.stringify(auths))
+        if (remove === true) {
+            await this.storage!.remove(key)
+        } else {
+            await this.storage!.write(key, JSON.stringify(auths))
+        }
     }
 
     /** Makes sure session is in storage list of sessions and moves it to top (most recently used). */
