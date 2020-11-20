@@ -641,13 +641,11 @@ export class Link implements esr.AbiProvider {
         if (existing >= 0) {
             auths.splice(existing, 1)
         }
-        if (remove === false) {
-            auths.unshift(auth)
-        }
         let key = this.sessionKey(identifier, 'list')
         if (remove === true) {
             await this.storage!.remove(key)
         } else {
+            auths.unshift(auth)
             await this.storage!.write(key, JSON.stringify(auths))
         }
     }
