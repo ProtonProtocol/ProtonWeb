@@ -707,6 +707,8 @@ function waitForCallback(url: string, ctx: {cancel?: () => void}) {
                 } else {
                     if (typeof event.data === 'string') {
                         handleResponse(event.data)
+                    } else if (event.data instanceof ArrayBuffer) {
+                        handleResponse(Buffer.from(event.data).toString())
                     } else {
                         handleResponse(event.data.toString())
                     }
