@@ -29,6 +29,16 @@ const link = await ConnectWallet({
     selectorOptions: {
         appName: 'Taskly', /* Optional: Name to show in modal, Default 'app' */
         appLogo: 'https://protondemos.com/static/media/taskly-logo.ad0bfb0f.svg', /* Optional: Logo to show in modal */
+        customStyleOptions: { /* Optional: Custom style options for modal */
+            modalBackgroundColor: '#F4F7FA',
+            logoBackgroundColor: 'white',
+            isLogoRound: true,
+            optionBackgroundColor: 'white',
+            optionFontColor: 'black',
+            primaryFontColor: 'black',
+            secondaryFontColor: '#6B727F',
+            linkColor: '#752EEB'
+        }
         // walletType: 'proton' /* Optional: Connect to only specified wallet (e.g. 'proton', 'anchor') */
     }
 })

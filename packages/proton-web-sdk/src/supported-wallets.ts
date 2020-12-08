@@ -1,13 +1,16 @@
-import styleText from './styles'
+import getStyleText from './styles'
+import { CustomStyleOptions } from './index'
 
 export default class SupportedWallets {
-    constructor(public readonly name?: string, logo?: string) {
+    constructor(public readonly name?: string, logo?: string, customStyleOptions?: CustomStyleOptions) {
         this.appLogo = logo
         this.appName = name || 'app'
+        this.customStyleOptions = customStyleOptions;
     }
 
     private appLogo: string | undefined
     private appName: string
+    private customStyleOptions: CustomStyleOptions | undefined
 
     /** Container and stylesheet for Wallet Selector */
     private selectorContainerEl!: HTMLElement
@@ -33,6 +36,8 @@ export default class SupportedWallets {
         this.font.rel = 'stylesheet';
         this.styleEl = document.createElement('style')
         this.styleEl.type = 'text/css'
+
+        const styleText = getStyleText(this.customStyleOptions)
         this.styleEl.appendChild(document.createTextNode(styleText))
         this.styleEl.appendChild(this.font)
         document.head.appendChild(this.styleEl)

@@ -39,7 +39,19 @@ export default {
         },
         selectorOptions: {
           appName: 'Taskly',
-          appLogo: 'https://taskly.protonchain.com/static/media/taskly-logo.ad0bfb0f.svg'
+          appLogo: 'https://taskly.protonchain.com/static/media/taskly-logo.ad0bfb0f.svg',
+          modalBackgroundColor: 'pink',
+          optionBackgroundColor: 'white',
+          customStyleOptions: {
+            modalBackgroundColor: '#F4F7FA',
+            logoBackgroundColor: 'white',
+            isLogoRound: true,
+            optionBackgroundColor: 'white',
+            optionFontColor: 'black',
+            primaryFontColor: 'black',
+            secondaryFontColor: '#6B727F',
+            linkColor: '#752EEB'
+          }
         }
       })
       this.link = link

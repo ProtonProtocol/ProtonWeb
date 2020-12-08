@@ -21,6 +21,17 @@ class Storage implements LinkStorage {
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
+export interface CustomStyleOptions {
+    modalBackgroundColor?: string,
+    logoBackgroundColor?: string,
+    isLogoRound?: boolean,
+    optionBackgroundColor?: string,
+    optionFontColor?: string,
+    primaryFontColor?: string,
+    secondaryFontColor?: string,
+    linkColor?: string,
+}
+
 interface ConnectWalletArgs {
     linkOptions: PartialBy<LinkOptions, 'transport'> & {
         endpoints?: string | string[],
@@ -34,6 +45,7 @@ interface ConnectWalletArgs {
         appName?: string,
         appLogo?: string,
         walletType?: string
+        customStyleOptions?: CustomStyleOptions
     }
 }
 
@@ -74,7 +86,7 @@ export const ConnectWallet = async ({
 
     while(!session) {
         // Create Modal Class
-        const wallets = new SupportedWallets(selectorOptions.appName, selectorOptions.appLogo)
+        const wallets = new SupportedWallets(selectorOptions.appName, selectorOptions.appLogo, selectorOptions.customStyleOptions)
 
         // Determine wallet type from storage or selector modal
         let walletType = selectorOptions.walletType
