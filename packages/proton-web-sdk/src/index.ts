@@ -153,8 +153,9 @@ export const ConnectWallet = async ({
                 if (backToSelector) {
                     document.removeEventListener('backToSelector', () => {backToSelector = true})
                     continue
+                } else {
+                    throw e;
                 }
-                return e
             }
         } else {
             const stringifiedUserAuth = await linkOptions.storage.read('user-auth')
