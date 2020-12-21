@@ -1,0 +1,47 @@
+{
+  "name": "@protonprotocol/proton-react-native-sdk",
+  "author": "philolo1",
+  "module": "dist/index.js",
+  "unpkg": "dist/bundle.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "version": "1.0.1",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "watch": "tsdx watch  --verbose --noClean",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "dependencies": {
+    "@protonprotocol/proton-browser-transport": "^2.5.4",
+    "@protonprotocol/proton-link": "^2.5.8",
+    "@protonprotocol/proton-signing-request": "^2.5.4",
+    "@protonprotocol/protonjs": "^21.0.21",
+    "@react-native-community/async-storage": "^1.12.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "gitHead": "1da8736c4a6390c789d15af662b3453c2c151878"
+}
