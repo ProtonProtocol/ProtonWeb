@@ -5,7 +5,7 @@ Installation
 This project relies on rn-nodeify.
 
 ```
-yarn add @protonprotocol/proton-react-native-sdk
+yarn add @proton/react-native-sdk
 yarn add rn-nodeify
 ```
 
@@ -29,7 +29,7 @@ import {
   ConnectWallet,
   LinkSession,
   ProtonLink,
-} from '../../proton-react-native-sdk/src/index';
+} from '@proton/react-native-sdk';
 
 class ProtonSDK {
   chainId: string;
