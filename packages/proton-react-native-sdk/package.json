@@ -30,7 +30,8 @@
     "@protonprotocol/proton-link": "^2.5.8",
     "@protonprotocol/proton-signing-request": "^2.5.4",
     "@protonprotocol/protonjs": "^21.0.21",
-    "@react-native-community/async-storage": "^1.12.1"
+    "@react-native-community/async-storage": "^1.12.1",
+    "react-native": "^0.63.4"
   },
   "husky": {
     "hooks": {
@@ -43,5 +44,8 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "gitHead": "1da8736c4a6390c789d15af662b3453c2c151878"
+  "gitHead": "1da8736c4a6390c789d15af662b3453c2c151878",
+  "devDependencies": {
+    "@types/react-native": "^0.63.43"
+  }
 }
