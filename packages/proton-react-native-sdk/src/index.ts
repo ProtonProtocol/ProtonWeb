@@ -39,8 +39,6 @@ export const ConnectWallet = async ({
   }
 
   // Add storage if not present
-  console.log('storage');
-  console.log('storage 2');
   if (!linkOptions.storage) {
     linkOptions.storage = new Storage(
       linkOptions.storagePrefix || 'proton-storage'
