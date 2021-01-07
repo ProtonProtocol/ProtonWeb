@@ -1,5 +1,5 @@
-import { LinkSession, LinkTransport } from '@protonprotocol/proton-link';
-import { SigningRequest } from '@protonprotocol/proton-signing-request';
+import { LinkSession, LinkTransport } from '@proton/link';
+import { SigningRequest } from '@proton/signing-request';
 import { Linking } from 'react-native';
 
 export interface ReactNativeTransportOptions {

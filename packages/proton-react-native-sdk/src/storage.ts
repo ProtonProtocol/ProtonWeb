@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-import { LinkStorage } from '@protonprotocol/proton-link';
+import { LinkStorage } from '@proton/link';
 
 class Storage implements LinkStorage {
   constructor(readonly keyPrefix: string) {}

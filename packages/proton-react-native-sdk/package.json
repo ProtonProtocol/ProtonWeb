@@ -26,10 +26,9 @@
     "analyze": "size-limit --why"
   },
   "dependencies": {
-    "@protonprotocol/proton-browser-transport": "^2.5.4",
-    "@protonprotocol/proton-link": "^2.5.8",
-    "@protonprotocol/proton-signing-request": "^2.5.4",
-    "@protonprotocol/protonjs": "^21.0.21",
+    "@proton/js": "^22.0.1-18",
+    "@proton/link": "^2.5.19",
+    "@proton/signing-request": "^2.5.8",
     "@react-native-community/async-storage": "^1.12.1",
     "react-native": "^0.63.4"
   },

@@ -141,7 +141,7 @@ try {
   ];
   const tx = await protonSDK.sendTransaction(actions);
 
-  // navigate to the subscriped page
+  // navigate to the subscribed page
   navigation.navigate('subscribed');
 } catch (ex) {
   // the transaction failed

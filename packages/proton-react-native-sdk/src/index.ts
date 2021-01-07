@@ -5,8 +5,8 @@ import ProtonLink, {
   LinkOptions,
   LinkSession,
   PermissionLevel,
-} from '@protonprotocol/proton-link';
-import { JsonRpc } from '@protonprotocol/protonjs';
+} from '@proton/link';
+import { JsonRpc } from '@proton/js';
 
 import Storage from './storage';
 
