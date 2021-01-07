@@ -1,15 +1,15 @@
 # Proton Web SDK
 
-Installation
+## Installation
 
-This project relies on rn-nodeify.
+This project relies on rn-nodeify. To install the project run the following commands:
 
 ```
 yarn add @proton/react-native-sdk
 yarn add rn-nodeify
 ```
 
-Afterwards run
+Afterwards run:
 
 ```
 ./node_modules/.bin/rn-nodeify --hack --install
@@ -21,10 +21,13 @@ and add the following to your package.json:
 "postinstall": "./node_modules/.bin/rn-nodeify --yarn --hack 'assert,buffer,crypto,dns,domain,events,stream'; node ./bin/postInstall",
 ```
 
-Usage
+## Usage
+
+### Initialization
+
+To use the react-native-sdk import the class `ConnectWallet` and the types `ProtonLink` and LInkSession` (if you are using typescript).
 
 ```javascript
-// sample class
 import {
   ConnectWallet,
   LinkSession,
@@ -38,6 +41,7 @@ class ProtonSDK {
   session: LinkSession;
   link: ProtonLink;
 
+
   constructor() {
     this.chainId =
       '71ee83bcf52142d61019d95f9cc5427ba6a0d7ff8accd9e2088ae2abeaf3d3dd';
@@ -46,31 +50,122 @@ class ProtonSDK {
     this.session = null;
     this.link = null;
   }
+```
 
-  login = async () => {
-    const { session, link } = await ConnectWallet({
-      linkOptions: { chainId: this.chainId, endpoints: this.endpoints },
-      transportOptions: {
-        requestAccount: this.requestAccount,
-        getReturnUrl: () => 'taskly://main',
+### Login
+
+Using the return value from `ConnectWallet`, call the login method with the chainId, endpoints, the requestAccount and getReturnUrl function. The `getRetunUrl` function returns the url scheme of the app that the user will be redirected after an interaction with the proton app. ConnectWallet will return the userSession and a link
+
+```javascript
+login = async () => {
+  const { session, link } = await ConnectWallet({
+    linkOptions: { chainId: this.chainId, endpoints: this.endpoints },
+    transportOptions: {
+      requestAccount: this.requestAccount,
+      getReturnUrl: () => 'taskly://main',
+    },
+  });
+
+  this.link = link;
+  this.session = session;
+  return { auth: session.auth, accountData: session.accountData[0] };
+};
+```
+
+This function can be used in code like this:
+
+```
+// Usage
+const protonSDK = new ProtonSDK();
+
+// usage login()
+try {
+  const { auth, accountData } = await protonSDK.login();
+  rootStore.setActor(auth.actor);
+  rootStore.setPermission(auth.permission);
+  rootStore.setName(accountData.name);
+  rootStore.setAvatar(accountData.avatar);
+
+  // do something like go to a subscription page
+  navigation.navigate('subscription');
+} catch (ex) {
+  // login failed
+  Alert.alert('Error', ex.message);
+}
+```
+
+Not that login will throw an exception when the user does not authorize the login.
+
+### Transaction
+
+To initiatize a transaction, use the `transact` methos of the session:
+
+```javascript
+sendTransaction = async (actions: Action) => {
+  return this.session.transact({ actions: actions }, { broadcast: true });
+};
+```
+
+The following code shows a small example how to send 5 XUSDT to the requested account.
+
+```javascript
+try {
+  const actions = [
+    {
+      account: 'xtokens',
+      name: 'transfer',
+      authorization: [
+        {
+          actor: rootStore.actor, // auth.actor that was saved before
+          permission: rootStore.permission, // auth.permission that was saved before
+        },
+      ],
+      data: {
+        from: rootStore.actor, // auth.actor that was saved before
+        to: protonSDK.requestAccount, // the account the transaction is send to
+        quantity: '5.000000 XUSDT', // the amount of the transaction
+        memo: 'Taskly',
       },
-    });
+    },
+  ];
 
-    this.link = link;
-    this.session = session;
-    return { auth: session.auth, accountData: session.accountData[0] };
-  };
+  const tx = await protonSDK.sendTransaction(actions);
 
-  sendTransaction = async (actions: Action) => {
-    return this.session.transact({ actions: actions }, { broadcast: true });
-  };
+  // navigate to the subscribed page
+  navigation.navigate('subscribed');
+} catch (ex) {
+  // the transaction failed
+  Alert.alert('Error', ex.message);
+}
+```
 
-  logout = async () => {
-    await this.link.removeSession(this.requestAccount, this.session.auth);
-    this.session = null;
-    this.link = null;
-  };
+Please note that if the user does not authorize the transaction, an exception will be thrown.
 
+### Logout
+
+To logout call `removeSession` on the `link` object.
+
+```javascript
+logout = async () => {
+  await this.link.removeSession(this.requestAccount, this.session.auth);
+  this.session = null;
+  this.link = null;
+};
+```
+
+In the application you can use it like this:
+
+```
+// usage logout
+protonSDK.logout();
+navigation.navigate('welcome');
+```
+
+### Restore session
+
+To restore a previous session, call the ConnectWallet function similar to login, but set the restoreSession key as true in linkOptions.
+
+```javascript
   restoreSession = async () => {
     try {
       const { link, session } = await ConnectWallet({
@@ -100,60 +195,11 @@ class ProtonSDK {
     }
   };
 }
+```
 
-// Usage
-const protonSDK = new ProtonSDK();
+The code below shows how `restoreSesssion` might be used:
 
-// usage login()
-try {
-  const { auth, accountData } = await protonSDK.login();
-  rootStore.setActor(auth.actor);
-  rootStore.setPermission(auth.permission);
-  rootStore.setName(accountData.name);
-  rootStore.setAvatar(accountData.avatar);
-
-  // do something like go to a subscription page
-  navigation.navigate('subscription');
-} catch (ex) {
-  // login failed
-  Alert.alert('Error', ex.message);
-}
-
-// send transaction
-try {
-  const actions = [
-    {
-      account: 'xtokens',
-      name: 'transfer',
-      authorization: [
-        {
-          actor: rootStore.actor,
-          permission: rootStore.permission,
-        },
-      ],
-      data: {
-        from: rootStore.actor,
-        to: protonSDK.requestAccount,
-        quantity: '5.000000 XUSDT',
-        memo: 'Taskly',
-      },
-    },
-  ];
-  const tx = await protonSDK.sendTransaction(actions);
-
-  // navigate to the subscribed page
-  navigation.navigate('subscribed');
-} catch (ex) {
-  // the transaction failed
-  Alert.alert('Error', ex.message);
-}
-
-// usage logout
-protonSDK.logout();
-navigation.navigate('welcome');
-
-// usage restoreSession
-
+```javascript
 try {
   await protonSDK.restoreSession();
 } catch (ex) {
