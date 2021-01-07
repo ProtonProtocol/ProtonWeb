@@ -25,7 +25,7 @@ and add the following to your package.json:
 
 ### Initialization
 
-To use the react-native-sdk import the class `ConnectWallet` and the types `ProtonLink` and LInkSession` (if you are using typescript).
+To use `@proton/react-native-sdk` import the class `ConnectWallet`. If you are using typescript, you can import the types `ProtonLink` and `LinkSession`.
 
 ```javascript
 import {
@@ -54,7 +54,7 @@ class ProtonSDK {
 
 ### Login
 
-Using the return value from `ConnectWallet`, call the login method with the chainId, endpoints, the requestAccount and getReturnUrl function. The `getRetunUrl` function returns the url scheme of the app that the user will be redirected after an interaction with the proton app. ConnectWallet will return the userSession and a link
+Using the return value from `ConnectWallet`, call the `login` method with the `chainId`, `endpoints`, the `requestAccount` and the `getReturnUrl` function. The `getRetunUrl` function returns the url scheme of the app that the user will be redirected to after an interaction with the Proton App. `ConnectWallet` will return the user session (`LinkSession`) and a link (`ProtonLink`).
 
 ```javascript
 login = async () => {
@@ -94,11 +94,11 @@ try {
 }
 ```
 
-Not that login will throw an exception when the user does not authorize the login.
+Note that login will throw an exception if the user does not authorize the login.
 
 ### Transaction
 
-To initiatize a transaction, use the `transact` methos of the session:
+To initiatize a transaction, use the `transact` method of the session object:
 
 ```javascript
 sendTransaction = async (actions: Action) => {
@@ -106,7 +106,7 @@ sendTransaction = async (actions: Action) => {
 };
 ```
 
-The following code shows a small example how to send 5 XUSDT to the requested account.
+The following code shows a small example how to send 5 XUSDT to an account:
 
 ```javascript
 try {
@@ -163,7 +163,7 @@ navigation.navigate('welcome');
 
 ### Restore session
 
-To restore a previous session, call the ConnectWallet function similar to login, but set the restoreSession key as true in linkOptions.
+To restore a previous session, call the `ConnectWallet` function similar to login, but set the `restoreSession` key as `true` in `linkOptions`.
 
 ```javascript
   restoreSession = async () => {
