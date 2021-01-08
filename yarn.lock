@@ -1712,7 +1712,7 @@
     "@octokit/openapi-types" "^2.0.1"
     "@types/node" ">= 8"
 
-"@proton/js@22.0.1-18", "@proton/js@^22.0.1-18":
+"@proton/js@22.0.1-18":
   version "22.0.1-18"
   resolved "https://registry.yarnpkg.com/@proton/js/-/js-22.0.1-18.tgz#7178309ad3a1c5671a4ce573a223ab85962a991a"
   integrity sha512-DPHMjOU6nATdFqxNZuN2m2w5Z5r0YTYvR7uCahJzEphj9O9RsTtk4uK9WhQ7C2XhNs18KSeYaWlXyqtjSqfocg==
