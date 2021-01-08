@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@proton/js": "22.0.1-19",
+    "@proton/signing-request": "2.5.13",
     "fast-sha256": "^1.1.1",
     "fast-text-encoding": "^1.0.3"
   },

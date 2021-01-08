@@ -1726,7 +1726,21 @@
     pako "1.0.11"
     ripemd-ts "0.0.2"
 
-"@proton/link@^2.5.19":
+"@proton/js@22.0.1-19":
+  version "22.0.1-19"
+  resolved "https://registry.yarnpkg.com/@proton/js/-/js-22.0.1-19.tgz#6de783d5a0a149b03860d985832886cbae0e7338"
+  integrity sha512-qBngSWNy9FdwsYG06/izgPy/LlssXloCiHwId+5UPfUrEz+o8/Ub/nHBT8bMUbOjY9sWyEBx5844qA8Qiao/Bg==
+  dependencies:
+    bn.js "5.1.2"
+    bs58 "^4.0.1"
+    debug "^4.3.1"
+    elliptic "6.5.3"
+    fast-text-encoding "^1.0.3"
+    hash.js "1.1.7"
+    pako "1.0.11"
+    ripemd-ts "0.0.2"
+
+"@proton/link@2.5.19":
   version "2.5.19"
   resolved "https://registry.yarnpkg.com/@proton/link/-/link-2.5.19.tgz#cb5dffe99d2557bc201f0b49d25ed37cad6f991a"
   integrity sha512-H/v8PSgmlOXIJFRlBx8JWSBke7h2xgZDED7ZHnQfNvlGYfCwpw76DQWBTW+CuWYzoKgiyuw25iwEWnhMcR01nA==

@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@proton/js": "22.0.1-19",
-    "@proton/link": "^2.5.19",
+    "@proton/link": "2.5.24",
     "@proton/signing-request": "^2.5.8",
     "@react-native-community/async-storage": "^1.12.1",
     "react-native": "^0.63.4"
