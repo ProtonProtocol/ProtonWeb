@@ -305,7 +305,7 @@ export default class BrowserTransport implements LinkTransport {
                 timeLeft > 0 ? new Date(timeLeft).toISOString().substr(14, 5) : '00:00'
             countdown.textContent = `${timeFormatted}`
         }
-        this.countdownTimer = setInterval(updateCountdown, 500)
+        this.countdownTimer = global.setInterval(updateCountdown, 500)
         updateCountdown()
 
         const infoEl = this.createEl({class: 'info'})
@@ -359,7 +359,7 @@ export default class BrowserTransport implements LinkTransport {
                 this.requestEl.appendChild(logoEl)
                 this.requestEl.appendChild(infoEl)
                 this.show()
-                this.closeTimer = setTimeout(() => {
+                this.closeTimer = global.setTimeout(() => {
                     this.hide()
                 }, 1.5 * 1000)
             } else {
