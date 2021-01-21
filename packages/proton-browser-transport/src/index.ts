@@ -217,7 +217,7 @@ export default class BrowserTransport implements LinkTransport {
 
         const actionEl = this.createEl({class: 'actions'})
         actionEl.appendChild(backgroundEl)
-        if (isMobile()) {
+        if (isMobile() || this.walletType == 'anchor') {
             actionEl.appendChild(divider)
             actionEl.appendChild(linkEl)
         }
