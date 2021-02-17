@@ -341,7 +341,9 @@ export class Link implements esr.AbiProvider {
 
     /**
      * Send an identity request and verify the identity proof.
-     * Errors thrown in this function will not be shown via SDK in transport.onFailure, but can be caught in frontend application
+     * Errors thrown in this function will not be shown via the onFailure modal from browser transport, but will still be lifted up to the frontend
+     * To catch these errors, place the ConnectWallet function call from @protonprotocal/proton-web-sdk into a try/catch block in the frontend
+     * In the case of a thrown error in this function, the sendRequest will still show the onSuccess modal
      * @param requestPermission Optional request permission if the request is for a specific account or permission.
      * @param info Metadata to add to the request.
      * @note This is for advanced use-cases, you probably want to use [[Link.login]] instead.
@@ -389,8 +391,8 @@ export class Link implements esr.AbiProvider {
     }
 
     /**
-     * Check for identity errors from result of sendRequest called by the identiy function
-     * Used to throw errors before transport.onSuccess is called in sendRequest
+     * The error checks in this function were taken out of Identify() to check for identity errors before onSuccess() is called in sendRequest()
+     * Using this function in sendRequest will allow any identity errors checked here to be shown via the brower transport onFailure modal
      * @param res compliled result in sendRequest function
      */
     public async checkIdentity(res: TransactResult) {
