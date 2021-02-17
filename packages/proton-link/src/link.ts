@@ -272,6 +272,9 @@ export class Link implements esr.AbiProvider {
                 })
                 result.processed = res.processed
             }
+            if (result.request.isIdentity()) {
+                await this.checkIdentity(result)
+            }
             if (t.onSuccess) {
                 t.onSuccess(request, result)
             }
@@ -338,6 +341,7 @@ export class Link implements esr.AbiProvider {
 
     /**
      * Send an identity request and verify the identity proof.
+     * Errors thrown in this function will not be shown via SDK in transport.onFailure, but can be caught in frontend application
      * @param requestPermission Optional request permission if the request is for a specific account or permission.
      * @param info Metadata to add to the request.
      * @note This is for advanced use-cases, you probably want to use [[Link.login]] instead.
@@ -362,25 +366,7 @@ export class Link implements esr.AbiProvider {
         const {signer} = res
         const signerKey = Key.Signature.fromString(res.signatures[0]).recover(message).toLegacyString()
         const account = await this.rpc.get_account(signer.actor)
-        if (!account) {
-            throw new IdentityError(`Signature from unknown account: ${signer.actor}`)
-        }
-        const permission = account.permissions.find(
-            ({perm_name}: any) => perm_name === signer.permission
-        )
-        if (!permission) {
-            throw new IdentityError(
-                `${signer.actor} signed for unknown permission: ${signer.permission}`
-            )
-        }
-        const auth = permission.required_auth
-        const keyAuth = auth.keys.find(({key}: any) => publicKeyEqual(key, signerKey))
-        if (!keyAuth) {
-            throw new IdentityError(`${formatAuth(signer)} has no key matching id signature`)
-        }
-        if (auth.threshold > keyAuth.weight) {
-            throw new IdentityError(`${formatAuth(signer)} signature does not reach auth threshold`)
-        }
+
         if (requestPermission) {
             if (
                 (requestPermission.actor !== esr.PlaceholderName &&
@@ -399,6 +385,45 @@ export class Link implements esr.AbiProvider {
             ...res,
             account,
             signerKey,
+        }
+    }
+
+    /**
+     * Check for identity errors from result of sendRequest called by the identiy function
+     * Used to throw errors before transport.onSuccess is called in sendRequest
+     * @param res compliled result in sendRequest function
+     */
+    public async checkIdentity(res: TransactResult) {
+        const request = res.request
+        const message = Buffer.concat([
+            Buffer.from(request.getChainId(), 'hex'),
+            Buffer.from(res.serializedTransaction),
+            Buffer.alloc(32),
+        ])
+        const {signer} = res
+        const signerKey = Key.Signature.fromString(res.signatures[0]).recover(message).toLegacyString()
+        const account = await this.rpc.get_account(signer.actor)
+        if (!account) {
+            throw new IdentityError(`Signature from unknown account: ${signer.actor}`)
+        }
+
+        const permission = account.permissions.find(
+            ({perm_name}: any) => perm_name === signer.permission
+        )
+        if (!permission) {
+            throw new IdentityError(
+                `${signer.actor} signed for unknown permission: ${signer.permission}`
+            )
+        }
+
+        const auth = permission.required_auth
+        const keyAuth = auth.keys.find(({key}: any) => publicKeyEqual(key, signerKey))
+        let test = 4;
+        if (!keyAuth || test > 2) {
+            throw new IdentityError(`${formatAuth(signer)} has no key matching id signature`)
+        }
+        if (auth.threshold > keyAuth.weight) {
+            throw new IdentityError(`${formatAuth(signer)} signature does not reach auth threshold`)
         }
     }
 
