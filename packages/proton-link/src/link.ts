@@ -420,8 +420,7 @@ export class Link implements esr.AbiProvider {
 
         const auth = permission.required_auth
         const keyAuth = auth.keys.find(({key}: any) => publicKeyEqual(key, signerKey))
-        let test = 4;
-        if (!keyAuth || test > 2) {
+        if (!keyAuth) {
             throw new IdentityError(`${formatAuth(signer)} has no key matching id signature`)
         }
         if (auth.threshold > keyAuth.weight) {
