@@ -8,7 +8,7 @@
   "unpkg": "dist/bundle.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
-  "version": "2.5.35",
+  "version": "2.5.36",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@proton/js": "22.0.45",
-    "@proton/web-sdk": "^2.7.16"
+    "@proton/web-sdk": "^2.7.17"
   },
   "husky": {
     "hooks": {
