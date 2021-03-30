@@ -196,11 +196,7 @@ export default class BrowserTransport implements LinkTransport {
         })
         linkA.addEventListener('click', (event) => {
             event.preventDefault()
-            if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-                iframe.setAttribute('src', sameDeviceUri)
-            } else {
-                window.location.href = sameDeviceUri
-            }
+            window.location.href = sameDeviceUri
         })
         linkEl.appendChild(linkA)
 
@@ -279,6 +275,7 @@ export default class BrowserTransport implements LinkTransport {
         cancel: (reason: string | Error) => void
     ) {
         if (session.metadata.sameDevice) {
+            request.setInfoKey('same_device', true)
             request.setInfoKey('return_path', returnUrl())
         }
 
@@ -329,7 +326,7 @@ export default class BrowserTransport implements LinkTransport {
         this.requestEl.appendChild(infoEl)
         this.show()
 
-        if (isAppleHandheld() && session.metadata.sameDevice) {
+        if (isMobile() && session.metadata.sameDevice) {
             const scheme = request.getScheme()
             window.location.href = `${scheme}://link`
         }
@@ -416,10 +413,6 @@ function returnUrl() {
         rv += returnUrlAlphabet.charAt(Math.floor(Math.random() * returnUrlAlphabetLen))
     }
     return rv
-}
-
-function isAppleHandheld() {
-    return /iP(ad|od|hone)/i.test(navigator.userAgent)
 }
 
 function isMobile() {

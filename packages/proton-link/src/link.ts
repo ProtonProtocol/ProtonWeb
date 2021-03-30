@@ -484,7 +484,9 @@ export class Link implements esr.AbiProvider {
                 lower_bound: session.auth.actor,
                 upper_bound: session.auth.actor,
             })
-            session.accountData = await this.rpc.isLightKYCVerified(rows);
+            if (rows && rows.length > 0) {
+                session.accountData = await this.rpc.isLightKYCVerified(rows);
+            }
         }
 
         // once successfully logged in, set wallet type so restore session can work properly
@@ -546,7 +548,9 @@ export class Link implements esr.AbiProvider {
                 lower_bound: session.auth.actor,
                 upper_bound: session.auth.actor,
             })
-            session.accountData = await this.rpc.isLightKYCVerified(rows);
+            if (rows && rows.length > 0) {
+                session.accountData = await this.rpc.isLightKYCVerified(rows);
+            }
         }
 
         return session
