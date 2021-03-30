@@ -5,7 +5,7 @@
   "unpkg": "dist/bundle.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
-  "version": "0.1.11",
+  "version": "0.1.14",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@proton/js": "22.0.45",
-    "@proton/link": "^2.5.31",
+    "@proton/link": "^2.5.34",
     "@proton/signing-request": "^2.5.19",
     "@react-native-community/async-storage": "^1.12.1",
     "react-native": "^0.63.4"

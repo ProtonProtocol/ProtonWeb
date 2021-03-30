@@ -279,6 +279,7 @@ export default class BrowserTransport implements LinkTransport {
         cancel: (reason: string | Error) => void
     ) {
         if (session.metadata.sameDevice) {
+            request.setInfoKey('same_device', true)
             request.setInfoKey('return_path', returnUrl())
         }
 
@@ -329,7 +330,7 @@ export default class BrowserTransport implements LinkTransport {
         this.requestEl.appendChild(infoEl)
         this.show()
 
-        if (isAppleHandheld() && session.metadata.sameDevice) {
+        if (isMobile() && session.metadata.sameDevice) {
             const scheme = request.getScheme()
             window.location.href = `${scheme}://link`
         }
@@ -416,10 +417,6 @@ function returnUrl() {
         rv += returnUrlAlphabet.charAt(Math.floor(Math.random() * returnUrlAlphabetLen))
     }
     return rv
-}
-
-function isAppleHandheld() {
-    return /iP(ad|od|hone)/i.test(navigator.userAgent)
 }
 
 function isMobile() {
