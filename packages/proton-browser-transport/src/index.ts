@@ -196,11 +196,7 @@ export default class BrowserTransport implements LinkTransport {
         })
         linkA.addEventListener('click', (event) => {
             event.preventDefault()
-            if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-                iframe.setAttribute('src', sameDeviceUri)
-            } else {
-                window.location.href = sameDeviceUri
-            }
+            window.location.href = sameDeviceUri
         })
         linkEl.appendChild(linkA)
 
