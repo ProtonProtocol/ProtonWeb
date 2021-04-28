@@ -25,7 +25,7 @@
     "analyze": "size-limit --why"
   },
   "dependencies": {
-    "@proton/js": "22.0.45",
+    "@proton/js": "22.0.63",
     "@proton/link": "^2.5.35",
     "@proton/signing-request": "^2.5.19",
     "@react-native-community/async-storage": "^1.12.1",
