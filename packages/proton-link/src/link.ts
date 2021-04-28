@@ -653,7 +653,7 @@ export class Link implements esr.AbiProvider {
         return {
             async getRequiredKeys(args: ApiInterfaces.AuthorityProviderArgs) {
                 const {availableKeys, transaction} = args
-                const result = await rpc.fetch('/v1/chain/get_required_keys', {
+                const result = await rpc.post('/v1/chain/get_required_keys', {
                     transaction,
                     available_keys: availableKeys.map(normalizePublicKey),
                 })
