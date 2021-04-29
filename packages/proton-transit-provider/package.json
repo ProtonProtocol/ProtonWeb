@@ -29,7 +29,7 @@
     "analyze": "size-limit --why"
   },
   "dependencies": {
-    "@proton/js": "22.0.63",
+    "@proton/js": "22.0.64",
     "@proton/web-sdk": "^2.7.22"
   },
   "husky": {

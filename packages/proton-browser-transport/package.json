@@ -29,7 +29,7 @@
     "analyze": "size-limit --why"
   },
   "dependencies": {
-    "@proton/js": "22.0.63",
+    "@proton/js": "22.0.64",
     "qrcode": "^1.4.4"
   },
   "husky": {

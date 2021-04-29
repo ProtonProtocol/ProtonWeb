@@ -29,7 +29,7 @@
     "analyze": "size-limit --why"
   },
   "dependencies": {
-    "@proton/js": "22.0.63",
+    "@proton/js": "22.0.64",
     "fast-sha256": "^1.1.1",
     "fast-text-encoding": "^1.0.3"
   },
