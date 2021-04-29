@@ -48,15 +48,16 @@ export default (customStyleOptions: CustomStyleOptions | undefined): string => {
 
     .wallet-selector-active {
         display: flex;
+        flex-direction: column;
     }
 
     .wallet-selector-inner {
         background: ${modalBackgroundColor};
         color: white;
-        margin: 20px;
+        margin: 20px 20px 13px 20px;
         padding-top: 50px;
         border-radius: 10px;
-        box-shadow: 0px 4px 100px rgba(0, 0, 0, .5);
+        box-shadow: 0px -10px 50px rgba(0, 0, 0, .5) !important;
         width: 360px;
         transition-property: all;
         transition-duration: .5s;
@@ -213,6 +214,20 @@ export default (customStyleOptions: CustomStyleOptions | undefined): string => {
     .wallet-selector-tos-link {
         color: ${linkColor};
         text-decoration: none;
+    }
+
+    .wallet-selector-footnote {
+        font-family: 'Circular Std Book', sans-serif;
+        font-size: 16px;
+        text-align: center;
+        width: 100%;
+        bottom: -30px;
+        left: 0;
+        color: white !important;
+    }
+    
+    .wallet-selector-footnote a {
+        color: #ffffff !important;
     }
     `
 }

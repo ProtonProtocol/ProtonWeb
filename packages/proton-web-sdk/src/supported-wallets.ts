@@ -180,10 +180,20 @@ export default class SupportedWallets {
             body.appendChild(walletList)
             body.appendChild(tosAgreementEl)
 
+            const footnoteEl = this.createEl({class: 'footnote', text: `Don't have Proton Wallet? `})
+            const footnoteLink = this.createEl({
+                tag: 'a',
+                target: '_blank',
+                href: 'https://protonchain.com/wallet',
+                text: 'Download it here',
+            })
+            footnoteEl.appendChild(footnoteLink)
+            
             emptyElement(this.selectorEl)
 
             this.selectorEl.appendChild(header)
             this.selectorEl.appendChild(body)
+            this.selectorContainerEl.appendChild(footnoteEl)
             this.showSelector()
         })
     }
