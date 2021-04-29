@@ -8,7 +8,7 @@
   "unpkg": "dist/bundle.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
-  "version": "2.5.37",
+  "version": "2.5.38",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@proton/js": "22.0.64",
-    "@proton/signing-request": "^2.5.21",
+    "@proton/signing-request": "^2.5.22",
     "eosjs-ecc": "^4.0.7",
     "isomorphic-ws": "^4.0.1",
     "pako": "^1.0.11",
