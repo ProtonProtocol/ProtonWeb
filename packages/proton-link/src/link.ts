@@ -475,20 +475,6 @@ export class Link implements esr.AbiProvider {
             await this.storeSession(identifier, session)
         }
 
-        if (session.auth.actor) {
-            const {rows} = await this.rpc.get_table_rows({
-                scope: 'eosio.proton',
-                code: 'eosio.proton',
-                json: true,
-                table: 'usersinfo',
-                lower_bound: session.auth.actor,
-                upper_bound: session.auth.actor,
-            })
-            if (rows && rows.length > 0) {
-                session.accountData = await this.rpc.isLightKYCVerified(rows);
-            }
-        }
-
         // once successfully logged in, set wallet type so restore session can work properly
         if (this.walletType.length > 0) {
             this.storage!.write('wallet-type', this.walletType)
@@ -537,20 +523,6 @@ export class Link implements esr.AbiProvider {
         if (auth) {
             // update latest used
             await this.touchSession(identifier, auth)
-        }
-
-        if (session.auth.actor) {
-            const {rows} = await this.rpc.get_table_rows({
-                scope: 'eosio.proton',
-                code: 'eosio.proton',
-                json: true,
-                table: 'usersinfo',
-                lower_bound: session.auth.actor,
-                upper_bound: session.auth.actor,
-            })
-            if (rows && rows.length > 0) {
-                session.accountData = await this.rpc.isLightKYCVerified(rows);
-            }
         }
 
         return session

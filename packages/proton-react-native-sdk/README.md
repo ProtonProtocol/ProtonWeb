@@ -68,7 +68,7 @@ login = async () => {
 
   this.link = link;
   this.session = session;
-  return { auth: session.auth, accountData: session.accountData[0] };
+  return { auth: session.auth };
 };
 ```
 
@@ -80,11 +80,9 @@ const protonSDK = new ProtonSDK();
 
 // usage login()
 try {
-  const { auth, accountData } = await protonSDK.login();
+  const { auth } = await protonSDK.login();
   rootStore.setActor(auth.actor);
   rootStore.setPermission(auth.permission);
-  rootStore.setName(accountData.name);
-  rootStore.setAvatar(accountData.avatar);
 
   // do something like go to a subscription page
   navigation.navigate('subscription');
@@ -184,11 +182,10 @@ To restore a previous session, call the `ConnectWallet` function similar to logi
       console.log('session', this.session);
       if (session) {
         return {
-          auth: this.session.auth,
-          accountData: this.session.accountData[0],
+          auth: this.session.auth
         };
       } else {
-        return { auth: { actor: '', permission: '' }, accountData: {} };
+        return { auth: { actor: '', permission: '' } };
       }
     } catch (e) {
       return e;

@@ -26,9 +26,6 @@ export abstract class LinkSession {
     abstract type: string
     /** Arbitrary metadata that will be serialized with the session. */
     abstract metadata: {[key: string]: any}
-    // Proton
-    /** Account data for proton related info */
-    accountData?: any[]
 
     /** Creates a eosjs compatible authority provider. */
     abstract makeAuthorityProvider(): ApiInterfaces.AuthorityProvider

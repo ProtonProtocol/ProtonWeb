@@ -1,0 +1,47 @@
+Arguments: 
+  /Users/jafri/.nvm/versions/node/v16.4.1/bin/node /Users/jafri/.nvm/versions/node/v16.4.1/bin/yarn install --mutex network:42424 --non-interactive
+
+PATH: 
+  /usr/local/opt/ruby/bin:/usr/local/opt/openjdk/bin:/Users/jafri/google-cloud-sdk/bin:/Users/jafri/.nvm/versions/node/v16.4.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/MacGPG2/bin:/Applications/Keybase.app/Contents/SharedSupport/bin:/Library/Apple/usr/bin:/Users/jafri/flutter/bin
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  16.4.1
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: connect EHOSTDOWN 104.16.16.35:443 - Local (0.0.0.0:0)
+      at internalConnect (node:net:906:16)
+      at defaultTriggerAsyncIdScope (node:internal/async_hooks:433:18)
+      at emitLookup (node:net:1050:9)
+      at /Users/jafri/.nvm/versions/node/v16.4.1/lib/node_modules/yarn/lib/cli.js:107150:29
+      at /Users/jafri/.nvm/versions/node/v16.4.1/lib/node_modules/yarn/lib/cli.js:106996:25
+      at RawTask.module.exports.RawTask.call (/Users/jafri/.nvm/versions/node/v16.4.1/lib/node_modules/yarn/lib/cli.js:83614:19)
+      at flush (/Users/jafri/.nvm/versions/node/v16.4.1/lib/node_modules/yarn/lib/cli.js:83696:29)
+      at processTicksAndRejections (node:internal/process/task_queues:78:11)
+
+npm manifest: 
+  {
+    "name": "proton-web",
+    "private": true,
+    "devDependencies": {
+      "lerna": "^3.19.0"
+    },
+    "scripts": {
+      "watch": "lerna run watch --parallel --stream",
+      "start": "lerna run start --stream"
+    },
+    "workspaces": [
+      "packages/*"
+    ]
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
